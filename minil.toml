@@ -1,0 +1,8 @@
+name = "optex"
+readme_from = "script/optex"
+script_files = [ "script/optex" ]
+# badges = ["travis"]
+authority="cpan:UTASHIRO"
+
+module_maker="ModuleBuildTiny"
+
