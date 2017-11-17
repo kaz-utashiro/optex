@@ -1,3 +1,7 @@
+package App::optex::help;
+
+1;
+
 package help;
 
 =head1 NAME

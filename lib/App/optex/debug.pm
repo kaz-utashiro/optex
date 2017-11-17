@@ -1,3 +1,7 @@
+package App::optex::debug;
+
+1;
+
 package debug;
 
 =head1 NAME

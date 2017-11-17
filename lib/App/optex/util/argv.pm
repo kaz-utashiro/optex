@@ -1,3 +1,7 @@
+package App::optex::util::argv;
+
+1;
+
 package util::argv;
 
 use v5.10;
@@ -96,7 +100,7 @@ sub proc {
     argv {
 	for (@_) {
 	    my($command) = /^ \<\( (.*) \) $/x or next;
-	    my $tmp = new File::Tmpfile;
+	    my $tmp = new Tmpfile;
 	    $tmp->write(`$command`)->rewind;
 	    push @persist, $tmp;
 	    $_ = $tmp->path;
@@ -122,7 +126,7 @@ Process substitution.
 
 1;
 
-package File::Tmpfile;
+package Tmpfile;
 
 use strict;
 use warnings;

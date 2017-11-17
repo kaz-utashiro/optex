@@ -1,3 +1,7 @@
+package App::optex::util;
+
+1;
+
 package util;
 
 sub setenv {
