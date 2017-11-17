@@ -21,7 +21,7 @@ or _command_ -> **optex** symlink, or
 **optex** is a general purpose option handling wrapper utilizing Perl
 module [Getopt::EX](https://metacpan.org/pod/Getopt::EX).  It enables user to define their own option
 aliases for any commands on the system, and provide module style
-extendable capability.
+extendible capability.
 
 Target command is given as argument:
 
@@ -70,7 +70,7 @@ Actually, `--iso-8601` option can be defined simpler as this:
 
     option --iso-8601 -I$<shift>
 
-This works fine almost always, but failes with sole `--iso-8601`
+This works fine almost always, but fails with sole `--iso-8601`
 option preceding other option like this:
 
     % date --iso-8601 -u
@@ -225,7 +225,7 @@ Then you can use them without module option.  In this case, option
 
     Option **--man** or **-h** will print document if available.  Option
     **-l** will print module path.  Option **-m** will show the module
-    itself.  When used after other modules, print infomation about the
+    itself.  When used after other modules, print information about the
     last declared module.  Next command show the document about **second**
     module.
 

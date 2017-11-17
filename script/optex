@@ -111,32 +111,20 @@ unless ($no_operation) {
     $rcloader->deal_with(\@ARGV);
 }
 
-if (0) {
-    if (($cmd_name ne $abs_name) and ($target_name eq $cmd_name)) {
-	warn "$abs_name: remove $cmd_dir from \$PATH\n" if $debug;
-	$ENV{PATH} = do {
-	    join(':',
-		 grep { (not -d $_ ) or abs_path($_) ne $cmd_dir }
-		 split /:+/, $ENV{PATH});
-	};
-    }
-}
-else {
-    $ENV{PATH} = join(':',
-		      grep { not remove_path($_) }
-		      split /:+/, $ENV{PATH});
-}
+$ENV{PATH} = join(':',
+		  grep { not remove_path($_) }
+		  split /:+/, $ENV{PATH});
 
 sub remove_path {
     my $dir = shift;
-    -d $dir or return 0; # useless, but just keep it.
+    -d $dir or return 0; # useless, but harmless.
     if (($cmd_name ne $abs_name) and (abs_path($dir) eq $cmd_dir)) {
 	warn "$abs_name($$): remove $dir\n" if $debug;
 	return 1;
     }
     my $path = "$dir/$target_name";
     -l $path or return 0;
-    my $link = readlink $path or return 1;
+    my $link = readlink $path or return 1; # impossible?
     if ($link =~ m:/$abs_name$:o) {
 	warn "optex($$): remove $dir\n" if $debug;
 	return 1;
@@ -314,7 +302,7 @@ sub show_modules {
     for my $path (@$path) {
 	my($name) = $path =~ m:([^/]+)$:;
 	my @module = do {
-#	    grep { not /default\.pm$/ }
+#	    grep { not /\bdefault\.pm$/ }
 	    glob "$path/*.pm";
 	};
 	next unless @module;
@@ -336,7 +324,7 @@ sub uniq {
 B<optex> is a general purpose option handling wrapper utilizing Perl
 module L<Getopt::EX>.  It enables user to define their own option
 aliases for any commands on the system, and provide module style
-extendable capability.
+extendible capability.
 
 Target command is given as argument:
 
@@ -386,7 +374,7 @@ Actually, C<--iso-8601> option can be defined simpler as this:
 
     option --iso-8601 -I$<shift>
 
-This works fine almost always, but failes with sole C<--iso-8601>
+This works fine almost always, but fails with sole C<--iso-8601>
 option preceding other option like this:
 
     % date --iso-8601 -u
@@ -545,7 +533,7 @@ message.
 
 Option B<--man> or B<-h> will print document if available.  Option
 B<-l> will print module path.  Option B<-m> will show the module
-itself.  When used after other modules, print infomation about the
+itself.  When used after other modules, print information about the
 last declared module.  Next command show the document about B<second>
 module.
 
