@@ -1,4 +1,4 @@
-name = "optex"
+name = "App-optex"
 readme_from = "script/optex"
 script_files = [ "script/optex" ]
 # badges = ["travis"]

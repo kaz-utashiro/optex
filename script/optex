@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 
-use version; our $VERSION = version->declare("0.02");
+use App::optex;
+my $version = $App::optex::VERSION;
 
 
 =encoding utf8
@@ -155,6 +156,7 @@ sub self_option {
     my %opt;
     my @optargs = (
 	"d|debug!"  => \$debug,
+	"v|version" => \$opt{version},
 	"h|man"     => \$opt{man},
 	"link|ln"   => \$opt{link},
 	"unlink|rm" => \$opt{unlink},
@@ -171,6 +173,10 @@ sub self_option {
     if ($opt{man}) {
 	exec "perldoc $abs_name";
 	die "exec: $!";
+    }
+    elsif ($opt{version}) {
+	print $version, "\n";
+	exit;
     }
     elsif ($opt{link} || $opt{unlink}) {
 	_symlink($argv, \%opt);
