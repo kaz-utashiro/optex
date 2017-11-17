@@ -2,6 +2,10 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+0.02 2017-11-17T03:13:35Z
+
+    - Put fake package name for CPAN test.
+
 0.01 2017-11-17T02:51:56Z
 
     - initial release

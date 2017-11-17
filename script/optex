@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
-use version; our $VERSION = version->declare("0.01");
+use version; our $VERSION = version->declare("0.02");
 
 
 =encoding utf8
