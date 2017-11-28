@@ -147,7 +147,7 @@ exit 1;
 sub self_option {
     my $argv = shift;
 
-    my $rcloader = Getopt::EX::Loader->new(BASECLASS => "");
+    local $rcloader = Getopt::EX::Loader->new(BASECLASS => "");
     $rcloader->load(FILE => "$config_dir/$abs_name.rc");
     $rcloader->deal_with($argv);
 
