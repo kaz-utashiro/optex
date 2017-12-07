@@ -27,7 +27,7 @@ B<optex> I<options> [ -l | -m ] ...
 =cut
 
 
-use v5.10;
+use 5.014;
 use strict;
 use warnings;
 
