@@ -31,7 +31,7 @@ or symbolic link file linked to **optex**:
 
     command -> optex
 
-If the configuration file `~/.optex.d/`_command_`.rc` exits, it is
+If the configuration file `~/.optex.d/`_command_`.rc` exists, it is
 read before execution and command arguments are pre-processed using
 that configuration.
 

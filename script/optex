@@ -340,7 +340,7 @@ or symbolic link file linked to B<optex>:
 
     command -> optex
 
-If the configuration file F<~/.optex.d/>I<command>F<.rc> exits, it is
+If the configuration file F<~/.optex.d/>I<command>F<.rc> exists, it is
 read before execution and command arguments are pre-processed using
 that configuration.
 
