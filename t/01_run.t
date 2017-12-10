@@ -9,6 +9,8 @@ my $lib = File::Spec->rel2abs('lib');
 my $bin = File::Spec->rel2abs('script/optex');
 
 is(optex(), 2<<8);
+
+$ENV{PATH} = "/bin:/usr/bin";
 is(optex('date'), 0);
 
 done_testing;
