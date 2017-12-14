@@ -135,12 +135,7 @@ sub remove_path {
 
 warn "$abs_name: exec $target_name @ARGV\n" if $debug;
 
-no warnings 'exec';
-
-exec $target_name, @ARGV
-    or warn "$target_name: $!\n";
-
-exit 1;
+exit system($target_name, @ARGV) >> 8;
 
 ######################################################################
 
