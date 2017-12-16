@@ -2,6 +2,13 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+v0.0.3 2017-12-16T19:07:20Z
+
+    - Improve module handling.
+    - Implement --io-color option in util::filter module.
+    - Set PATH before command execution.
+    - Require perl 5.014
+
 v0.0.2 2017-11-28T15:12:44Z
 
     - Clean up test code.
