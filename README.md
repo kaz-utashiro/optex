@@ -15,6 +15,7 @@ or _command_ -> **optex** symlink, or
     --ls            list link files
     --rc            list rc files
     --nop, -x       disable option processing
+    --[no]module    disable module option on arguments
 
 # DESCRIPTION
 
@@ -259,6 +260,14 @@ symbolic link.
 - **--nop**, **-x** _command_
 
     Stop option manipulation.  Use full pathname otherwise.
+
+- **--**\[**no**\]**module**
+
+    **optex** deals with module option (-M) on target command by default.
+    However, there is a command which also uses same option for own
+    purpose.  Option **--nomodule** disables that behaviour.  Other option
+    interpretation is still effective, and there is no problem using
+    module option in rc or module files.
 
 # FILES AND DIRECTORIES
 
