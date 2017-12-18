@@ -281,4 +281,4 @@ option --osub --of &$<shift>
 option --esub --ef &$<shift>
 
 option --set-io-color -M__PACKAGE__::io_color($<shift>)
-option --io-color --set-io-color STDOUT=B,STDERR=R
+option --io-color --set-io-color STDERR=555/511E
