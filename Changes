@@ -2,6 +2,10 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+v0.0.4 2017-12-18T09:11:34Z
+
+    - Use Getopt::EX::Colormap new E effect.
+
 v0.0.3 2017-12-16T19:07:20Z
 
     - Improve module handling.
