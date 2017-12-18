@@ -4,6 +4,9 @@ package App::optex::util;
 
 package util;
 
+use strict;
+use warnings;
+
 sub setenv {
     while (($a, $b) = splice @_, 0, 2) {
 	$ENV{$a} = $b;
