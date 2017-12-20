@@ -47,9 +47,20 @@ function is called instead.
 
 Set input/output function.  Tis is shortcut for B<--if> B<&>I<function>.
 
+=item B<--set-io-color> IO=I<color>
+
+Set color filter to filehandle.  You can set color filter for STDERR
+like this:
+
+    --set-io-filter STDERR=R
+
+Use comma to set multiple filehandles at once.
+
+    --set-io-filter STDIN=B,STDERR=R
+
 =item B<--io-color>
 
-Set filter to colorize STDOUT in Blue, and STDERR in Red.
+Set default color to STDOUT and STDERR.
 
 =back
 
