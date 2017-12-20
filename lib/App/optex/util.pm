@@ -7,10 +7,10 @@ package util;
 use strict;
 use warnings;
 
+use List::Util qw(pairmap);
+
 sub setenv {
-    while (($a, $b) = splice @_, 0, 2) {
-	$ENV{$a} = $b;
-    }
+    pairmap { $ENV{$a} = $b } @_;
 }
 
 1;
