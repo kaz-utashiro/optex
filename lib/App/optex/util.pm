@@ -1,9 +1,5 @@
 package App::optex::util;
 
-1;
-
-package util;
-
 use strict;
 use warnings;
 

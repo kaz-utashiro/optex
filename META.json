@@ -42,7 +42,7 @@
       },
       "runtime" : {
          "requires" : {
-            "Getopt::EX" : "v1.4.2",
+            "Getopt::EX" : "v1.5.1",
             "List::Util" : "1.45",
             "perl" : "5.014"
          }
@@ -66,5 +66,8 @@
       }
    },
    "version" : "v0.0.4",
-   "x_authority" : "cpan:UTASHIRO"
+   "x_authority" : "cpan:UTASHIRO",
+   "x_contributors" : [
+      "Mohammad S Anwar <mohammad.anwar@yahoo.com>"
+   ]
 }

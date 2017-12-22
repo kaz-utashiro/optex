@@ -1,9 +1,5 @@
 package App::optex::util::filter;
 
-1;
-
-package util::filter;
-
 use v5.10;
 use strict;
 use warnings;
