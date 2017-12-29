@@ -280,7 +280,7 @@ Gzip standard input.
 
 __DATA__
 
-option function
+mode function
 
 option --if &set(STDIN=$<shift>)
 option --of &set(STDOUT=$<shift>)
