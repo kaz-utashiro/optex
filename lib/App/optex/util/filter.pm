@@ -12,7 +12,6 @@ my($mod, $argv);
 
 sub initialize {
     ($mod, $argv) = @_;
-    $mod->mode(function => 1);
 }
 
 binmode STDIN,  ":encoding(utf8)";
@@ -280,6 +279,8 @@ Gzip standard input.
 1;
 
 __DATA__
+
+option function
 
 option --if &set(STDIN=$<shift>)
 option --of &set(STDOUT=$<shift>)
