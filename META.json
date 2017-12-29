@@ -42,7 +42,7 @@
       },
       "runtime" : {
          "requires" : {
-            "Getopt::EX" : "v1.5.1",
+            "Getopt::EX" : "v1.6.0",
             "List::Util" : "1.45",
             "perl" : "5.014"
          }
@@ -65,7 +65,7 @@
          "web" : "https://github.com/kaz-utashiro/optex"
       }
    },
-   "version" : "v0.0.6",
+   "version" : "v0.0.7",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
       "Mohammad S Anwar <mohammad.anwar@yahoo.com>"

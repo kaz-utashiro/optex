@@ -2,6 +2,11 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+v0.0.7 2017-12-29T01:52:51Z
+
+    - Implement "chdir" function in util.pm
+    - Update to use Getopt::EX new "mode command".
+
 v0.0.6 2017-12-26T01:32:38Z
 
     - Fix filter.pm to handle STDERR properly.
