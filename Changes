@@ -2,6 +2,12 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+v0.0.9 2018-01-15T23:01:47Z
+
+    - Implement command alias with config loader.
+    - Supress wide character warning.
+    - false(1) says: The false utility always exits with a nonzero exit code.
+
 v0.0.8 2017-12-29T02:15:43Z
 
     - Fix wrong "mode" declaration.

@@ -76,6 +76,14 @@ option preceding other option like this:
 
     % date --iso-8601 -u
 
+## COMMAND ALIASES
+
+EXPERIMENTAL: Command aliases can be set in the configuration file;
+`~/.optex.d/config.toml`, like:
+
+    [alias]
+        tel = [ "greple", "-Mtel" ]
+
 ## MACROS
 
 Complex string can be composed using macro `define`.  Next example is
@@ -268,7 +276,7 @@ symbolic link.
 
     **optex** deals with module option (-M) on target command by default.
     However, there is a command which also uses same option for own
-    purpose.  Option **--nomodule** disables that behaviour.  Other option
+    purpose.  Option **--nomodule** disables that behavior.  Other option
     interpretation is still effective, and there is no problem using
     module option in rc or module files.
 
@@ -333,7 +341,7 @@ symbolic link.
 
 # AUTHOR
 
-Kaz Utashiro
+Kazumasa Utashiro
 
 # COPYRIGHT
 
