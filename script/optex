@@ -59,7 +59,7 @@ my $module_dir = $config_dir;
 my $bin_dir = $ENV{$env_BINDIR} || "$config_dir/bin";
 
 ##
-## config
+## load config file
 ##
 my $config = {};
 my $config_file = "$config_dir/config.toml";
@@ -71,6 +71,9 @@ if (my $fh = IO::File->new($config_file)) {
 }
 my $alias = $config->{alias} //= {};
 
+##
+## setup Getopt::EX
+##
 require Getopt::EX::Loader;
 $rcloader = new Getopt::EX::Loader
     BASECLASS => [ '', 'App::optex' ],
@@ -80,14 +83,11 @@ if (my $opt = $ENV{$env_MODULE_OPT}) {
     $rcloader->configure(MODULE_OPT => $opt);
 }
 
-sub load_rc {
-    my $rc = shift;
-    $rcloader->load(FILE => $rc);
-    warn "$abs_name: load $rc\n" if $debug;
-}
+load_rc("$config_dir/default.rc");
 
-load_rc "$config_dir/default.rc";
-
+##
+## setup module search path
+##
 my @private_mod_path = (
     do {
 	if (my $mod_path = $ENV{$env_MODULE_PATH}) {
@@ -101,6 +101,9 @@ my @private_mod_path = (
 
 prepend_path(@private_mod_path);
 
+##
+## get target command name
+##
 my $target_name = do {
     if ($cmd_name ne $abs_name) {
 	$cmd_name;
@@ -125,6 +128,9 @@ if (my $alias = $alias->{$target_name}) {
     }
 }
 
+##
+## prepare command specific module path
+##
 my @command_mod_path =
     grep { -d $_ } map { "$_/$target_name" } @private_mod_path;
 
@@ -135,15 +141,36 @@ if ($mod_arg and @ARGV > 0 and $ARGV[0] eq $mod_opt) {
     exit;
 }
 
+##
+## load command specific rc file
+##
 unless ($no_operation) {
-    load_rc "$config_dir/$target_name.rc";
+    load_rc("$config_dir/$target_name.rc");
     $rcloader->configure(PARSE_MODULE_OPT => $mod_arg);
     $rcloader->deal_with(\@ARGV);
 }
 
+##
+## setup PATH
+##
 $ENV{PATH} = join(':',
 		  grep { not remove_path($_) }
 		  split /:+/, $ENV{PATH});
+
+warn "$abs_name: exec $target_name @ARGV\n" if $debug;
+
+##
+## execute target command
+##
+exit system($target_name, @ARGV) >> 8;
+
+######################################################################
+
+sub load_rc {
+    my $rc = shift;
+    $rcloader->load(FILE => $rc);
+    warn "$abs_name: load $rc\n" if $debug;
+}
 
 sub remove_path {
     my $dir = shift;
@@ -161,12 +188,6 @@ sub remove_path {
     }
     return 0;
 }
-
-warn "$abs_name: exec $target_name @ARGV\n" if $debug;
-
-exit system($target_name, @ARGV) >> 8;
-
-######################################################################
 
 sub self_option {
     my $argv = shift;
@@ -621,7 +642,7 @@ Stop option manipulation.  Use full pathname otherwise.
 
 B<optex> deals with module option (-M) on target command by default.
 However, there is a command which also uses same option for own
-purpose.  Option B<--nomodule> disables that behaviour.  Other option
+purpose.  Option B<--nomodule> disables that behavior.  Other option
 interpretation is still effective, and there is no problem using
 module option in rc or module files.
 
@@ -708,7 +729,7 @@ L<Getopt::EX>, L<Getopt::EX::Loader>, L<Getopt::EX::Module>
 
 =head1 AUTHOR
 
-Kaz Utashiro
+Kazumasa Utashiro
 
 
 =head1 COPYRIGHT
@@ -723,4 +744,5 @@ Copyright 2017 Kazumasa Utashiro
 =cut
 
 
-#  LocalWords:  optex
+#  LocalWords:  optex rc iso greple awk pdf LANG ENV Oct JST domingo
+#  LocalWords:  setenv autoload PERLLIB BINDIR Utashiro Kazumasa
