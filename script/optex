@@ -37,6 +37,8 @@ use Data::Dumper;
 $Data::Dumper::Sortkeys = 1;
 use Cwd qw(abs_path);
 use List::Util qw(uniq);
+use IO::File;
+use TOML;
 
 our $rcloader;
 our $debug;
@@ -55,6 +57,19 @@ my $HOME = $ENV{HOME} or die "No \$HOME.\n";
 my $config_dir = $ENV{$env_ROOT} || "${HOME}/.${abs_name}.d";
 my $module_dir = $config_dir;
 my $bin_dir = $ENV{$env_BINDIR} || "$config_dir/bin";
+
+##
+## config
+##
+my $config = {};
+my $config_file = "$config_dir/config.toml";
+if (my $fh = IO::File->new($config_file)) {
+    my $toml = do { local $/; <$fh> };
+    my($data, $err) = from_toml($toml);
+    die "$config_file: $err\n" unless $data;
+    $config = $data;
+}
+my $alias = $config->{alias} //= {};
 
 require Getopt::EX::Loader;
 $rcloader = new Getopt::EX::Loader
@@ -99,6 +114,16 @@ my $target_name = do {
 	}
     }
 };
+
+##
+## alias
+##
+if (my $alias = $alias->{$target_name}) {
+    if (my($name, @opts) = @{$alias}) {
+	$target_name = $name;
+	unshift @ARGV, @opts;
+    }
+}
 
 my @command_mod_path =
     grep { -d $_ } map { "$_/$target_name" } @private_mod_path;
@@ -380,6 +405,14 @@ This works fine almost always, but fails with sole C<--iso-8601>
 option preceding other option like this:
 
     % date --iso-8601 -u
+
+=head2 COMMAND ALIASES
+
+EXPERIMENTAL: Command aliases can be set in the configuration file;
+F<~/.optex.d/config.toml>, like:
+
+    [alias]
+        tel = [ "greple", "-Mtel" ]
 
 =head2 MACROS
 
