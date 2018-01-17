@@ -293,4 +293,4 @@ option --osub &set(STDOUT=&$<shift>)
 option --esub &set(STDERR=&$<shift>)
 
 option --set-io-color &io_color($<shift>)
-option --io-color --set-io-color STDERR=555/412;E
+option --io-color --set-io-color STDERR=555/201;E
