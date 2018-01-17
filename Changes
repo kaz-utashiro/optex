@@ -2,6 +2,10 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+v0.0.10 2018-01-17T14:23:14Z
+
+    - Implement "no-module" configuration.
+
 v0.0.9 2018-01-15T23:01:47Z
 
     - Implement command alias with config loader.

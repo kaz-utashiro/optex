@@ -4,7 +4,7 @@
       "Kaz Utashiro <kaz@utashiro.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.0.13, CPAN::Meta::Converter version 2.143240",
+   "generated_by" : "Minilla/v3.0.10, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
@@ -44,12 +44,13 @@
          "requires" : {
             "Getopt::EX" : "v1.6.0",
             "List::Util" : "1.45",
-            "TOML" : "0",
+            "TOML" : "0.95",
             "perl" : "5.014"
          }
       },
       "test" : {
          "requires" : {
+            "Test::Command" : "0.11",
             "Test::More" : "0.98"
          }
       }
@@ -66,7 +67,7 @@
          "web" : "https://github.com/kaz-utashiro/optex"
       }
    },
-   "version" : "v0.0.9",
+   "version" : "v0.0.10",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
       "Mohammad S Anwar <mohammad.anwar@yahoo.com>"
