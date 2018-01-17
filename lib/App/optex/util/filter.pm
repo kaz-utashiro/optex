@@ -51,11 +51,11 @@ Set input/output function.  Tis is shortcut for B<--if> B<&>I<function>.
 Set color filter to filehandle.  You can set color filter for STDERR
 like this:
 
-    --set-io-filter STDERR=R
+    --set-io-color STDERR=R
 
 Use comma to set multiple filehandles at once.
 
-    --set-io-filter STDIN=B,STDERR=R
+    --set-io-color STDIN=B,STDERR=R
 
 =item B<--io-color>
 
