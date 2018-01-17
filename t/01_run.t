@@ -2,7 +2,6 @@ use strict;
 use warnings;
 use utf8;
 use Test::More;
-use t::Util;
 use File::Spec;
 
 my $lib = File::Spec->rel2abs('lib');
