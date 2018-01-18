@@ -4,6 +4,7 @@ use utf8;
 use Test::More;
 use Test::Command;
 use File::Spec;
+use File::Path qw(make_path);
 
 my($perl_dir, $perl_name) = ($^X =~ m{ (.*) / ([^/]+) $ }x);
 
@@ -26,17 +27,19 @@ is( $echo_n->stdout_value, 'yes', 'alias' );
 my $hello = command('hello');
 is( $hello->stdout_value, "hello  world", 'alias string' );
 
-system "mkdir -p $bindir" unless -d $bindir;
+unless (-d $bindir) {
+    make_path $bindir or die "mkdir: $!";
+}
 for my $command (qw(echo echo-n)) {
     my $file = "${bindir}/${command}";
     unless (-l $file) {
-    	symlink $bin, $file;
+    	symlink $bin, $file or die "symlink $file: $!";
     }
 }
 
-stdout_is_eq( [ 'echo', '-M' ], "-M\n", 'symlink, no-module' );
+stdout_is_eq( 'echo -M', "-M\n", 'symlink, no-module' );
 
-stdout_is_eq( [ 'echo-n', 'yes' ], "yes", 'symlink, alias' );
+stdout_is_eq( 'echo-n yes', "yes", 'symlink, alias' );
 
 done_testing;
 

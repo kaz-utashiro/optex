@@ -50,6 +50,8 @@
       },
       "test" : {
          "requires" : {
+            "File::Path" : "0",
+            "File::Spec" : "0",
             "Test::Command" : "0.11",
             "Test::More" : "0.98"
          }
