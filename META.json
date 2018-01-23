@@ -4,7 +4,7 @@
       "Kaz Utashiro <kaz@utashiro.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v3.0.10, CPAN::Meta::Converter version 2.143240",
+   "generated_by" : "Minilla/v3.0.14, CPAN::Meta::Converter version 2.143240",
    "license" : [
       "perl_5"
    ],
@@ -69,7 +69,7 @@
          "web" : "https://github.com/kaz-utashiro/optex"
       }
    },
-   "version" : "v0.0.10",
+   "version" : "v0.0.11",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
       "Mohammad S Anwar <mohammad.anwar@yahoo.com>"
