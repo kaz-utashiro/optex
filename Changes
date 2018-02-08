@@ -2,6 +2,11 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+v0.0.13 2018-02-08T14:22:53Z
+
+    - Not to use 'echo' command in test.
+    - Update '--ls' format.
+
 v0.0.12 2018-01-24T00:19:54Z
 
     - Make symbolic link to "perl" for "/usr/bin/env perl" to work.
