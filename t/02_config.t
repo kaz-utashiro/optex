@@ -24,12 +24,12 @@ my $config_data = <<'END';
 ############################################################
 
 no-module = [
-	"expr",
+	"echo",
 ]
 
 [alias]
 	double = "expr 2 *"
-	hello = "echo -n 'hello  world'"
+	hello = "echo 'hello  world'"
 
 ############################################################
 END
@@ -46,14 +46,14 @@ my $fh = IO::File->new("> $config_file")
 print $fh $config_data;
 $fh->close();
 
-my $expr = command('expr', '-M');
+my $expr = command('echo', '-M');
 is( $expr->stdout_value, "-M\n", 'no-module' );
 
 my $double = command('double', '1');
 is( $double->stdout_value, "2\n", 'alias' );
 
 my $hello = command('hello');
-is( $hello->stdout_value, "hello  world", 'alias string' );
+is( $hello->stdout_value, "hello  world\n", 'alias string' );
 
 
 ## make bin directory
@@ -67,15 +67,17 @@ symlink $^X, "${bindir}/perl"
     or do { warn "symlink $^X: $!"; goto FINISH };
 
 ## command links
-for my $command (qw(expr double)) {
+for my $command (qw(echo double hello)) {
     my $file = "${bindir}/${command}";
     symlink $bin, $file
 	or do { warn "symlink $file: $!"; goto FINISH };
 }
 
-stdout_is_eq( [ 'expr', '-M' ], "-M\n", 'symlink, no-module' );
+stdout_is_eq( [ 'echo', '-M' ], "-M\n", 'symlink, no-module' );
 
 stdout_is_eq( [ 'double',  '2' ], "4\n", 'symlink, alias' );
+
+stdout_is_eq( [ 'hello' ], "hello  world\n", 'symlink, alias string' );
 
 done_testing;
 

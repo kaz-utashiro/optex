@@ -2,6 +2,10 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+v0.0.14 2018-02-09T02:09:07Z
+
+    - Hmm... `expr -M` does not produce "-M" on freebsd.
+
 v0.0.13 2018-02-08T14:22:53Z
 
     - Not to use 'echo' command in test.
