@@ -2,6 +2,10 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+v0.1 2018-06-25T14:19:03Z
+
+    - Separate Tmpfile.pm.
+
 v0.0.15 2018-03-24T05:30:20Z
 
     - Update license.
