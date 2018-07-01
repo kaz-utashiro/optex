@@ -2,6 +2,10 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+v0.2 2018-07-01T02:09:04Z
+
+    - Add --exit option.
+
 v0.1 2018-06-25T14:19:03Z
 
     - Separate Tmpfile.pm.
