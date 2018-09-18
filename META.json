@@ -45,6 +45,7 @@
             "Getopt::EX" : "v1.6.0",
             "List::Util" : "1.45",
             "TOML" : "0.95",
+            "Text::VisualWidth::PP" : "0.05",
             "perl" : "5.014"
          }
       },
@@ -69,7 +70,7 @@
          "web" : "https://github.com/kaz-utashiro/optex"
       }
    },
-   "version" : "v0.2.1",
+   "version" : "v0.2.2",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
       "Mohammad S Anwar <mohammad.anwar@yahoo.com>"
