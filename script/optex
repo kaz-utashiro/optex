@@ -417,13 +417,16 @@ sub prepend_path {
 }
 
 sub show_modules {
-    my $path = @_ ? shift : \@mod_path;
+    my $path = @_ ? shift : [
+	@mod_path,
+	grep { -d } map { "$_/App/optex" } @INC,
+	];
     print "MODULES:\n";
     for my $path (@$path) {
 	my($name) = $path =~ m:([^/]+)$:;
 	my @module = do {
 #	    grep { not /\bdefault\.pm$/ }
-	    glob "$path/*.pm";
+	    glob "$path/[a-z0-9]*.pm";
 	};
 	next unless @module;
 	print "    $path\n";
