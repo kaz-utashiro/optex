@@ -282,7 +282,7 @@ sub self_option {
 
 sub _symlink {
     my($argv, $op) = @_;
-    -d $bin_dir or die "Directory $bin_dir does not exists.\n";
+    -d $bin_dir or die "Directory $bin_dir does not exist.\n";
 
     my @target = @$argv;
     for my $target (@target) {
