@@ -28,8 +28,7 @@ B<optex> I<options> [ -l | -m ] ...
 =cut
 
 
-use 5.014;
-use strict;
+use v5.14;
 use warnings;
 
 use utf8;
@@ -73,7 +72,7 @@ my $config_file = $ENV{$env_CONFIG} || "$config_dir/config.toml";
 ##
 my $config = sub {
     my $file = shift;
-    my $fh = new IO::File $file, "<:encoding(UTF-8)" or return {};
+    my $fh = IO::File->new($file, "<:encoding(UTF-8)") or return {};
     my $toml = do { local $/; <$fh> };
     my($data, $err) = from_toml $toml;
     die "$file: $err\n" unless $data;
@@ -97,9 +96,10 @@ my %nomodule = do {
 ## setup Getopt::EX
 ##
 require Getopt::EX::Loader;
-$rcloader = new Getopt::EX::Loader
-    BASECLASS => [ '', 'App::optex' ],
-    IGNORE_NO_MODULE => 1;
+$rcloader = Getopt::EX::Loader->new(
+    BASECLASS => [ '', 'App::optex', 'Getopt::EX' ],
+    IGNORE_NO_MODULE => 1,
+    );
 
 load_rc("$config_dir/default.rc");
 
@@ -226,8 +226,9 @@ sub remove_path {
 sub self_option {
     my $argv = shift;
 
-    local $rcloader = new Getopt::EX::Loader
-	BASECLASS => [ '', 'App::optex' ];
+    local $rcloader = Getopt::EX::Loader->new(
+	BASECLASS => [ '', 'App::optex', 'Getopt::EX' ],
+	);
     $rcloader->load(FILE => "$config_dir/$abs_name.rc");
     $rcloader->deal_with($argv);
 
