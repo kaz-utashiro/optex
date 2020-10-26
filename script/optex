@@ -196,6 +196,9 @@ warn "$abs_name: exec $exec_name @ARGV\n" if $debug;
 ##
 my $status = system $exec_name, @ARGV;
 
+close STDOUT;
+close STDERR;
+
 exit($exit_code // ( $status >> 8 ));
 
 ######################################################################
@@ -869,7 +872,7 @@ The following copyright notice applies to all the files provided in
 this distribution, including binary files, unless explicitly noted
 otherwise.
 
-Copyright 2017-2019 Kazumasa Utashiro
+Copyright 2017-2020 Kazumasa Utashiro
 
 
 =cut
