@@ -213,14 +213,14 @@ sub remove_path {
     my $dir = shift;
     -d $dir or return 0; # useless, but harmless.
     if (($cmd_name ne $abs_name) and (abs_path($dir) eq $cmd_dir)) {
-	warn "$abs_name($$): remove $dir\n" if $debug;
+	warn "$abs_name($$): remove $dir from PATH.\n" if $debug;
 	return 1;
     }
     my $path = "$dir/$target_name";
     -l $path or return 0;
     my $link = readlink $path or return 1; # impossible?
     if ($link =~ m:/$abs_name$:o) {
-	warn "optex($$): remove $dir\n" if $debug;
+	warn "optex($$): remove $dir from PATH.\n" if $debug;
 	return 1;
     }
     return 0;
