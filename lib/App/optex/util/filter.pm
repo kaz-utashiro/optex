@@ -277,6 +277,11 @@ sub timestamp {
 
 Put timestamp on each line of output.
 
+Format is interpreted by C<strftime> function.  Default format is
+C<"%T.%f"> where C<%T> is 24h style time C<%H:%M:%S>, and C<%f> is
+microsecond.  C<%L> means millisecond. C<%nN> can be used to specify
+precision.
+
 =cut
 
 ######################################################################
@@ -300,9 +305,15 @@ Gzip standard input.
 
 =back
 
+=head1 EXAMPLE
+
+    optex -Mutil::filter --osub timestamp ping -c 10 localhost
+
 =head1 SEE ALSO
 
 L<App::optex::xform>
+
+L<https://qiita.com/kaz-utashiro/items/2df8c7fbd2fcb880cee6>
 
 =cut
 
