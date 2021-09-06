@@ -7,6 +7,7 @@ use Carp;
 use utf8;
 use Encode;
 use open IO => 'utf8', ':std';
+use Hash::Util qw(lock_keys);
 use Data::Dumper;
 
 my($mod, $argv);
@@ -132,7 +133,7 @@ sub set {
 	    }
 	    use Getopt::EX::Func qw(parse_func);
 	    my $func = parse_func($filter);
-	    io_filter { $func->call($io => $opt{$io}) } $io => 1;
+	    io_filter { $func->call() } $io => 1;
 	}
 	else {
 	    io_filter { exec $filter or die "exec: $!\n" } $io => 1;
@@ -141,7 +142,7 @@ sub set {
     %opt and die "Unknown parameter: " . Dumper \%opt;
     ();
 }
-	
+
 =item B<set>()
 
 Set input/output filter.
@@ -150,9 +151,84 @@ Set input/output filter.
 
 ######################################################################
 
-=item B<rev_line>()
+sub unctrl {
+    while (<>) {
+	s/([\000-\010\013-\037])/'^' . pack('c', ord($1)|0100)/ge;
+	print;
+    }
+}
 
-Reverse output.
+=item B<unctrl>()
+
+Visualize control characters.
+
+=cut
+
+######################################################################
+
+my %visible = (
+    nul => [ 1, "\000", "\x{2400}", qw(␀ SYMBOL_FOR_NULL)                      ],
+    soh => [ 1, "\001", "\x{2401}", qw(␁ SYMBOL_FOR_START_OF_HEADING)          ],
+    stx => [ 1, "\002", "\x{2402}", qw(␂ SYMBOL_FOR_START_OF_TEXT)             ],
+    etx => [ 1, "\003", "\x{2403}", qw(␃ SYMBOL_FOR_END_OF_TEXT)               ],
+    eot => [ 1, "\004", "\x{2404}", qw(␄ SYMBOL_FOR_END_OF_TRANSMISSION)       ],
+    enq => [ 1, "\005", "\x{2405}", qw(␅ SYMBOL_FOR_ENQUIRY)                   ],
+    ack => [ 1, "\006", "\x{2406}", qw(␆ SYMBOL_FOR_ACKNOWLEDGE)               ],
+    bel => [ 1, "\007", "\x{2407}", qw(␇ SYMBOL_FOR_BELL)                      ],
+    bs  => [ 1, "\010", "\x{2408}", qw(␈ SYMBOL_FOR_BACKSPACE)                 ],
+    ht  => [ 1, "\011", "\x{2409}", qw(␉ SYMBOL_FOR_HORIZONTAL_TABULATION)     ],
+    nl  => [ 1, "\012", "\x{240A}", qw(␊ SYMBOL_FOR_LINE_FEED)                 ],
+    vt  => [ 1, "\013", "\x{240B}", qw(␋ SYMBOL_FOR_VERTICAL_TABULATION)       ],
+    np  => [ 1, "\014", "\x{240C}", qw(␌ SYMBOL_FOR_FORM_FEED)                 ],
+    cr  => [ 1, "\015", "\x{240D}", qw(␍ SYMBOL_FOR_CARRIAGE_RETURN)           ],
+    so  => [ 1, "\016", "\x{240E}", qw(␎ SYMBOL_FOR_SHIFT_OUT)                 ],
+    si  => [ 1, "\017", "\x{240F}", qw(␏ SYMBOL_FOR_SHIFT_IN)                  ],
+    dle => [ 1, "\020", "\x{2410}", qw(␐ SYMBOL_FOR_DATA_LINK_ESCAPE)          ],
+    dc1 => [ 1, "\021", "\x{2411}", qw(␑ SYMBOL_FOR_DEVICE_CONTROL_ONE)        ],
+    dc2 => [ 1, "\022", "\x{2412}", qw(␒ SYMBOL_FOR_DEVICE_CONTROL_TWO)        ],
+    dc3 => [ 1, "\023", "\x{2413}", qw(␓ SYMBOL_FOR_DEVICE_CONTROL_THREE)      ],
+    dc4 => [ 1, "\024", "\x{2414}", qw(␔ SYMBOL_FOR_DEVICE_CONTROL_FOUR)       ],
+    nak => [ 1, "\025", "\x{2415}", qw(␕ SYMBOL_FOR_NEGATIVE_ACKNOWLEDGE)      ],
+    syn => [ 1, "\026", "\x{2416}", qw(␖ SYMBOL_FOR_SYNCHRONOUS_IDLE)          ],
+    etb => [ 1, "\027", "\x{2417}", qw(␗ SYMBOL_FOR_END_OF_TRANSMISSION_BLOCK) ],
+    can => [ 1, "\030", "\x{2418}", qw(␘ SYMBOL_FOR_CANCEL)                    ],
+    em  => [ 1, "\031", "\x{2419}", qw(␙ SYMBOL_FOR_END_OF_MEDIUM)             ],
+    sub => [ 1, "\032", "\x{241A}", qw(␚ SYMBOL_FOR_SUBSTITUTE)                ],
+    esc => [ 0, "\033", "\x{241B}", qw(␛ SYMBOL_FOR_ESCAPE)                    ],
+    fs  => [ 1, "\034", "\x{241C}", qw(␜ SYMBOL_FOR_FILE_SEPARATOR)            ],
+    gs  => [ 1, "\035", "\x{241D}", qw(␝ SYMBOL_FOR_GROUP_SEPARATOR)           ],
+    rs  => [ 1, "\036", "\x{241E}", qw(␞ SYMBOL_FOR_RECORD_SEPARATOR)          ],
+    us  => [ 1, "\037", "\x{241F}", qw(␟ SYMBOL_FOR_UNIT_SEPARATOR)            ],
+    sp  => [ 1, "\040", "\x{2420}", qw(␠ SYMBOL_FOR_SPACE)                     ],
+    del => [ 1, "\177", "\x{2421}", qw(␡ SYMBOL_FOR_DELETE)                    ],
+);
+
+use List::Util qw(pairmap);
+my %v = pairmap { $b->[1] => $b->[2] } %visible;
+
+my $keep_after = qr/[\n]/;
+
+use Text::ANSI::Tabs qw(ansi_expand);
+
+sub visible {
+    my %vchar = map { $_ => $visible{$_}->[0] } keys %visible;
+    lock_keys %vchar;
+    pairmap {
+	map { $vchar{$_} = $b } $a eq 'all' ? keys %visible : $a;
+    } @_;
+    my @vchar = grep { $vchar{$_} } keys %vchar;
+    my $vchar = join '', map { $visible{$_}->[1] } @vchar;
+    while (<>) {
+	$_ = ansi_expand($_, tabstyle => 'bar');
+	s/(?=(${keep_after}?))([$vchar]|(?!))/$v{$2}$1/g
+	    if $vchar ne '';           #^^^^ does not work w/o this. bug?
+	print;
+    }
+}
+
+=item B<visible>()
+
+Make control characters visible.
 
 =cut
 
