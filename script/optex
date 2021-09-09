@@ -237,46 +237,46 @@ sub self_option {
 
     use Getopt::Long qw(GetOptionsFromArray);
     Getopt::Long::Configure(qw"bundling require_order");
-    my %opt;
-    my @optargs = (
-	"d|debug!"  => \$debug,
-	"v|version" => \$opt{version},
-	"h|man"     => \$opt{man},
-	"link|ln"   => \$opt{link},
-	"unlink|rm" => \$opt{unlink},
-	"f|force"   => \$opt{force},
-	"ls"        => \$opt{ls},
-	"rc"        => \$opt{rc},
-	"l|long"    => \$opt{long},
-	"m|cat"     => \$opt{cat},
-	"M"         => \$opt{M},
-	"module!"   => \$main::mod_arg,
-	"x|nop!"    => \$main::no_operation,
-	"exit=i"    => \$main::exit_code,
-	);
-    GetOptionsFromArray $argv, @optargs;
+    use Getopt::EX::Hashed qw(has); {
+	has debug   => spec => " ! d  " , default => \$debug;
+	has version => spec => "   v  " ;
+	has man     => spec => "   h  " ;
+	has link    => spec => "   ln " ;
+	has unlink  => spec => "   rm " ;
+	has force   => spec => "   f  " ;
+	has ls      => spec => "      " ;
+	has rc      => spec => "      " ;
+	has long    => spec => "   l  " ;
+	has cat     => spec => "   m  " ;
+	has M       => spec => "      " ;
+	has module  => spec => " !    " , default => \$main::mod_arg;
+	has nop     => spec => " ! x  " , default => \$main::no_operation;
+	has exit    => spec => " =i   " , default => \$main::exit_code;
+    }
+    my $opt = Getopt::EX::Hashed->new();
+    GetOptionsFromArray $argv, $opt->optspec;
 
-    if ($opt{man}) {
+    if ($opt->{man}) {
 	exec "perldoc $abs_name";
 	die "exec: $!";
     }
-    elsif ($opt{version}) {
+    elsif ($opt->{version}) {
 	print $version, "\n";
 	exit;
     }
-    elsif ($opt{link} || $opt{unlink}) {
-	_symlink($argv, \%opt);
+    elsif ($opt->{link} || $opt->{unlink}) {
+	_symlink($argv, $opt);
 	exit 0;
     }
-    elsif ($opt{ls}) {
-	_ls($argv, \%opt);
+    elsif ($opt->{ls}) {
+	_ls($argv, $opt);
 	exit 0;
     }
-    elsif ($opt{rc}) {
-	_rc($argv, \%opt);
+    elsif ($opt->{rc}) {
+	_rc($argv, $opt);
 	exit 0;
     }
-    elsif ($opt{M}) {
+    elsif ($opt->{M}) {
 	show_modules();
 	exit 0;
     }

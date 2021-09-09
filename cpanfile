@@ -1,6 +1,7 @@
 requires 'perl', '5.014';
 
 requires 'Getopt::EX', 'v1.20.0';
+requires 'Getopt::EX::Hashed';
 requires 'List::Util', '1.45';
 requires 'Hash::Util';
 requires 'TOML', '0.95';
