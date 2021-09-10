@@ -238,6 +238,7 @@ sub self_option {
     use Getopt::Long qw(GetOptionsFromArray);
     Getopt::Long::Configure(qw"bundling require_order");
     use Getopt::EX::Hashed qw(has); {
+	Getopt::EX::Hashed->configure(DEFAULT => [ is => 'ro' ]);
 	has debug   => spec => " ! d  " , default => \$debug;
 	has version => spec => "   v  " ;
 	has man     => spec => "   h  " ;
@@ -247,36 +248,37 @@ sub self_option {
 	has ls      => spec => "      " ;
 	has rc      => spec => "      " ;
 	has long    => spec => "   l  " ;
+	has path    => spec => "   p  " ;
 	has cat     => spec => "   m  " ;
 	has M       => spec => "      " ;
 	has module  => spec => " !    " , default => \$main::mod_arg;
 	has nop     => spec => " ! x  " , default => \$main::no_operation;
 	has exit    => spec => " =i   " , default => \$main::exit_code;
-    }
-    my $opt = Getopt::EX::Hashed->new();
-    GetOptionsFromArray $argv, $opt->optspec;
+    }; no Getopt::EX::Hashed;
+    my $opt = Getopt::EX::Hashed->new->reset();
+    GetOptionsFromArray($argv, $opt->optspec) or usage();
 
-    if ($opt->{man}) {
+    if ($opt->man) {
 	exec "perldoc $abs_name";
 	die "exec: $!";
     }
-    elsif ($opt->{version}) {
+    elsif ($opt->version) {
 	print $version, "\n";
 	exit;
     }
-    elsif ($opt->{link} || $opt->{unlink}) {
+    elsif ($opt->link || $opt->unlink) {
 	_symlink($argv, $opt);
 	exit 0;
     }
-    elsif ($opt->{ls}) {
+    elsif ($opt->ls) {
 	_ls($argv, $opt);
 	exit 0;
     }
-    elsif ($opt->{rc}) {
+    elsif ($opt->rc) {
 	_rc($argv, $opt);
 	exit 0;
     }
-    elsif ($opt->{M}) {
+    elsif ($opt->M) {
 	show_modules();
 	exit 0;
     }
