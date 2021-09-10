@@ -2,6 +2,10 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+v0.5 2021-09-10T15:49:36Z
+
+    - Implement -Mutil::filter::visible() interface.
+
 v0.4.1 2020-11-17T00:14:33Z
 
     - Add dependency for Time::Piece.
