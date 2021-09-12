@@ -229,8 +229,8 @@ sub visible {
 	$flag{$_} = $all for keys %flag;
     }
     my($tabstyle, $s_char, $c_char) = ('bar', '', '');
-    if (exists $opt{tabstyle}) {
-	$tabstyle = delete $opt{tabstyle};
+    if (exists $opt{tabstyle} and $tabstyle = delete $opt{tabstyle}) {
+	Text::ANSI::Tabs->configure(tabstyle => $tabstyle);
     }
     %flag = (%flag, %opt);
     for my $name (keys %flag) {
@@ -239,12 +239,13 @@ sub visible {
     }
     while (<>) {
 	if ($tabstyle) {
-	    $_ = ansi_expand($_, tabstyle => $tabstyle);
+	    $_ = ansi_expand($_);
 	}
-	s/(?=(${keep_after}?))([$s_char]|(?#why?)(?!))/$symbol{$2}$1/g
+	s{(?=(${keep_after}?))([$s_char]|(?#bug?)(?!))}{$symbol{$2}$1}g
 	    if $s_char ne '';
-	s/(?=(${keep_after}?))([$c_char])/'^'.pack('c',ord($2)+64).$1/ge
-	    if $c_char ne '';
+	s{(?=(${keep_after}?))([$c_char]|(?#bug?)(?!))}{
+	    '^'.pack('c',ord($2)+64).$1
+	}ge if $c_char ne '';
 	print;
     }
 }
@@ -268,8 +269,8 @@ Name is C<tabstyle>, C<all>, or one of these: [ nul soh stx etx eot
 enq ack bel bs ht nl vt np cr so si dle dc1 dc2 dc3 dc4 nak syn etb
 can em sub esc fs gs rs us sp del ].
 
-If the name is C<all>, the value is set for all characters.  Default
-is equivalent to:
+If the name is C<all>, the value is set for all characters.
+Default is equivalent to:
 
     visible(tabstyle=bar,all=s,esc=0,nl=0)
 
