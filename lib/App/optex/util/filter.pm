@@ -302,8 +302,8 @@ Reverse output.
 
 sub rev_char {
     while (<>) {
-	print reverse /./g;
-	print "\n" if /\n\z/;
+	my $lb = s/(\R)\z// ? $1 : '';
+	print reverse(/\X/g), $lb;
     }
 }
 
