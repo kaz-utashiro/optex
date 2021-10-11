@@ -225,7 +225,7 @@ sub visible {
     my %opt = @_;
     my %flag = pairmap { $a => $b->[0] } %control;
     lock_keys %flag;
-    if (my $all = delete $opt{all}) {
+    if (defined(my $all = delete $opt{all})) {
 	$flag{$_} = $all for keys %flag;
     }
     my($tabstyle, $s_char, $c_char) = ('bar', '', '');
