@@ -74,7 +74,7 @@
          "web" : "https://github.com/kaz-utashiro/optex"
       }
    },
-   "version" : "v0.5.1",
+   "version" : "v0.5.2",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
       "Mohammad S Anwar <mohammad.anwar@yahoo.com>"
