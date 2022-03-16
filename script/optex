@@ -444,10 +444,10 @@ sub show_modules {
 
 =head1 DESCRIPTION
 
-B<optex> is a general purpose option handling wrapper utilizing Perl
-module L<Getopt::EX>.  It enables user to define their own option
-aliases for any commands on the system, and provide module style
-extendible capability.
+B<optex> is a general purpose command option handling wrapper
+utilizing Perl module L<Getopt::EX>.  It enables user to define their
+own option aliases for any commands on the system, and provide module
+style extensibility.
 
 Target command is given as an argument:
 
@@ -865,6 +865,9 @@ Override default symbolic link directory F<OPTEX_ROOT/bin>.
 
 L<Getopt::EX>, L<Getopt::EX::Loader>, L<Getopt::EX::Module>
 
+L<App::optex::textconv>
+
+L<App::optex::xform>
 
 =head1 AUTHOR
 

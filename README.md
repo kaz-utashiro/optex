@@ -19,10 +19,10 @@ or _command_ -> **optex** symlink, or
 
 # DESCRIPTION
 
-**optex** is a general purpose option handling wrapper utilizing Perl
-module [Getopt::EX](https://metacpan.org/pod/Getopt::EX).  It enables user to define their own option
-aliases for any commands on the system, and provide module style
-extendible capability.
+**optex** is a general purpose command option handling wrapper
+utilizing Perl module [Getopt::EX](https://metacpan.org/pod/Getopt::EX).  It enables user to define their
+own option aliases for any commands on the system, and provide module
+style extensibility.
 
 Target command is given as an argument:
 
@@ -395,6 +395,10 @@ format.
 # SEE ALSO
 
 [Getopt::EX](https://metacpan.org/pod/Getopt::EX), [Getopt::EX::Loader](https://metacpan.org/pod/Getopt::EX::Loader), [Getopt::EX::Module](https://metacpan.org/pod/Getopt::EX::Module)
+
+[App::optex::textconv](https://metacpan.org/pod/App::optex::textconv)
+
+[App::optex::xform](https://metacpan.org/pod/App::optex::xform)
 
 # AUTHOR
 
