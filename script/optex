@@ -68,6 +68,11 @@ my $bin_dir = $ENV{$env_BINDIR} || "$config_dir/bin";
 my $config_file = $ENV{$env_CONFIG} || "$config_dir/config.toml";
 
 ##
+## decode @ARGV
+##
+@ARGV = map { utf8::is_utf8($_) ? $_ : decode('utf8', $_) } @ARGV;
+
+##
 ## load config file
 ##
 my $config = sub {
