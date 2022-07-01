@@ -42,8 +42,8 @@
       },
       "runtime" : {
          "requires" : {
-            "Getopt::EX" : "v1.20.0",
-            "Getopt::EX::Hashed" : "0.9918",
+            "Getopt::EX" : "v1.28.0",
+            "Getopt::EX::Hashed" : "1.03",
             "Hash::Util" : "0",
             "List::Util" : "1.45",
             "TOML" : "0.95",
