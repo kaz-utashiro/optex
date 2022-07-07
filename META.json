@@ -1,5 +1,5 @@
 {
-   "abstract" : "optex command module direcrtory",
+   "abstract" : "General purpose command option wrapper",
    "author" : [
       "Kazumasa Utashiro"
    ],

@@ -12,7 +12,7 @@ __END__
 
 =head1 NAME
 
-optex - optex command module direcrtory
+optex - optex command module directory
 
 =head1 SYNOPSIS
 
