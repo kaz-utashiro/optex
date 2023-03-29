@@ -137,11 +137,10 @@ will print:
 
 ######################################################################
 
-my @persist;
-
 use App::optex::Tmpfile;
 
 sub proc {
+    state @persist;
     argv {
 	for (@_) {
 	    my($command) = /^ \<\( (.*) \) $/x or next;
