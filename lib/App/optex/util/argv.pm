@@ -212,7 +212,7 @@ Parameter B<:all> can be used to enable everything.
 
 You can use alternative names:
 
-    -Mutil::argv::enable(move=mynove,copy=mycopy)
+    -Mutil::argv::enable(move=mymove,copy=mycopy)
 
 =over 4
 
