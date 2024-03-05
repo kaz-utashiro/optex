@@ -2,6 +2,7 @@ requires 'perl', '5.014';
 
 requires 'Getopt::EX', '2.1.6';
 requires 'Getopt::EX::Hashed', '1.0503';
+requires 'Getopt::EX::i18n';
 requires 'List::Util', '1.45';
 requires 'Hash::Util';
 requires 'TOML', '0.95';
