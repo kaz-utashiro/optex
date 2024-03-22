@@ -48,7 +48,7 @@
             "Hash::Util" : "0",
             "List::Util" : "1.45",
             "TOML" : "0.95",
-            "Text::ANSI::Tabs" : "1.03",
+            "Text::ANSI::Tabs" : "1.04",
             "Text::VisualWidth::PP" : "0.05",
             "Time::Piece" : "0",
             "perl" : "5.014"
