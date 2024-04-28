@@ -201,10 +201,15 @@ warn "$abs_name: exec $exec_name @ARGV\n" if $debug;
 ##
 my $status = system $exec_name, @ARGV;
 
-close STDOUT;
-close STDERR;
-
-exit($exit_code // ( $status >> 8 ));
+END {
+    if (defined $exit_code) {
+	$? = $exit_code;
+    } elsif (defined $status) {
+	$? = $status >> 8;
+    }
+    close STDOUT;
+    close STDERR;
+}
 
 ######################################################################
 
