@@ -1,0 +1,416 @@
+=encoding utf8
+
+=head1 NAME
+
+optex - 通用命令选项包装器
+
+=head1 SYNOPSIS
+
+B<optex> I<command> [ B<-M>I<module> ] ...
+
+或 I<command> -> B<optex> 符号链接，或
+
+B<optex> I<options> [ -l | -m ] ...
+
+    --link,   --ln  create symlink
+    --unlink, --rm  remove symlink
+    --ls            list link files
+    --rc            list rc files
+    --nop, -x       disable option processing
+    --[no]module    disable module option on arguments
+
+=cut
+=head1 DESCRIPTION
+
+B<optex> 是一个利用 Perl 模块 L<Getopt::EX> 的通用命令选项处理包装器。它允许用户为系统中的任何命令定义自己的选项别名，并提供模块风格的可扩展性。
+
+目标命令作为参数给出：
+
+    % optex command
+
+或 B<optex> 的符号链接文件：
+
+    command -> optex
+
+如果存在配置文件 F<~/.optex.d/>I<command>F<.rc>，则会在执行前对其进行评估，并使用该文件对命令参数进行预处理。
+
+
+=head2 OPTION ALIASES
+
+想想 macOS 的 C<date> 命令，它没有 C<-I[TIMESPEC]> 选项。使用 B<optex>，可以通过在 F<~/.optex.d/date.rc> 文件中进行以下设置来实现这些功能。
+
+    option -I        -Idate
+    option -Idate    +%F
+    option -Iseconds +%FT%T%z
+    option -Iminutes +%FT%H:%M%z
+    option -Ihours   +%FT%H%z
+
+    option --iso-8601         -I
+    option --iso-8601=date    -Idate
+    option --iso-8601=seconds -Iseconds
+    option --iso-8601=minutes -Iminutes
+    option --iso-8601=hours   -Ihours
+
+然后，下一条命令就会按预期运行。
+
+    % optex date -Iseconds
+
+如果在命令搜索路径中找到符号链接 C<< date -> optex >>，则可以使用与标准命令相同的命令，但使用不支持的选项。
+
+    % date -Iseconds
+
+常用配置保存在 F<~/.optex.d/default.rc> 文件中，这些规则将应用于通过 B<optex> 执行的所有命令。
+
+实际上，C<--iso-8601> 选项可以定义得更简单：
+
+    option --iso-8601 -I$<shift>
+
+几乎每次都能正常工作，但如果只有 C<--iso-8601> 选项在其他选项之前，则会出现类似故障：
+
+    % date --iso-8601 -u
+
+=head2 COMMAND ALIASES
+
+命令别名可以在配置文件中这样设置：
+
+    [alias]
+        pgrep = [ "greple", "-Mperl", "--code" ]
+
+别名用于查找 rc 文件和模块目录。在上例中，将引用 F<~/.optex.d/pgrep.rc> 和 F<~/.optex.d/pgrep/>。
+
+请阅读 L<CONFIGURATION FILE> 部分。
+
+=head2 MACROS
+
+使用宏 C<define> 可以组成复杂的字符串。下一个例子是在文件 F<~/.optex.d/awk.rc> 中声明的计算文本中元音的 awk 脚本。
+
+    define __delete__ /[bcdfgkmnpsrtvwyz]e( |$)/
+    define __match__  /ey|y[aeiou]*|[aeiou]+/
+    define __count_vowels__ <<EOS
+    {
+        s = tolower($0);
+        gsub(__delete__, " ", s);
+        for (count=0; match(s, __match__); count++) {
+            s=substr(s, RSTART + RLENGTH);
+        }
+        print count " " $0;
+    }
+    EOS
+    option --vowels __count_vowels__
+
+可以这样使用
+
+    % awk --vowels /usr/share/dict/words
+
+在设置复杂选项时，C<expand> 指令非常有用。C<expand> 的作用与 C<option> 几乎相同，但只在文件范围内有效，不适用于命令行选项。
+
+    expand repository	( -name .git -o -name .svn -o -name RCS )
+    expand no_dots	! -name .*
+    expand no_version	! -name *,v
+    expand no_backup	! -name *~
+    expand no_image 	! -iname *.jpg  ! -iname *.jpeg \
+			! -iname *.gif  ! -iname *.png
+    expand no_archive	! -iname *.tar  ! -iname *.tbz  ! -iname *.tgz
+    expand no_pdf	! -iname *.pdf
+
+    option --clean \
+            repository -prune -o \
+            -type f \
+            no_dots \
+            no_version no_backup \
+            no_image \
+            no_archive \
+            no_pdf
+
+    % find . --clean -print
+
+
+=head2 MODULES
+
+B<optex> 还支持模块扩展。以 C<date> 为例，模块文件位于 F<~/.optex.d/date/> 目录下。如果存在默认模块 F<~/.optex.d/date/default.pm>，则每次执行时都会自动加载该模块。
+
+这是一个普通的 Perl 模块，因此包声明和最终 true 值是必要的。在它们之间，可以放入任何类型的 Perl 代码。例如，下一个程序在执行 C<date> 命令前将环境变量 C<LANG> 设为 C<C>。
+
+    package default;
+    $ENV{LANG} = 'C';
+    1;
+
+    % /bin/date
+    2017年 10月22日 日曜日 18時00分00秒 JST
+
+    % date
+    Sun Oct 22 18:00:00 JST 2017
+
+其他模块使用 C<-M> 选项加载。与其他选项不同，C<-M> 必须放在参数列表的开头。F<~/.optex.d/date/> 目录中的模块文件只用于 C<date> 命令。如果模块放在 F<~/.optex.d/> 目录下，则所有命令都可以使用它。
+
+如果要使用 C<-Mes> 模块，请在 F<~/.optex.d/es.pm> 文件中加入以下内容。
+
+    package es;
+    $ENV{LANG} = 'es_ES';
+    1;
+
+    % date -Mes
+    domingo, 22 de octubre de 2017, 18:00:00 JST
+
+如果在库路径中找不到指定的模块，B<optex> 将忽略该选项并立即停止参数处理。忽略的选项将传递给目标命令。
+
+模块也用于子程序调用。假设 F<~/.optex.d/env.pm> 模块看起来像这样：
+
+    package env;
+    sub setenv {
+        while (($a, $b) = splice @_, 0, 2) {
+            $ENV{$a} = $b;
+        }
+    }
+    1;
+
+那么它可以以更通用的方式使用。在下例中，第一种格式易于阅读，但第二种格式更易于键入，因为它没有需要转义的特殊字符。
+
+    % date -Menv::setenv(LANG=de_DE) # need shell quote
+    % date -Menv::setenv=LANG=de_DE  # alternative format
+    So 22 Okt 2017 18:00:00 JST
+
+选项别名也可以在模块中声明，位于文件末尾，紧跟特殊字面 C<__DATA__>。利用这一点，你可以为不同目的准备多组选项。想想通用的 B<i18n> 模块：
+
+    package i18n;
+    1;
+    __DATA__
+    option --cn -Menv::setenv(LANG=zh_CN) // 中国語 - 簡体字
+    option --tw -Menv::setenv(LANG=zh_TW) // 中国語 - 繁体字
+    option --us -Menv::setenv(LANG=en_US) // 英語
+    option --fr -Menv::setenv(LANG=fr_FR) // フランス語
+    option --de -Menv::setenv(LANG=de_DE) // ドイツ語
+    option --it -Menv::setenv(LANG=it_IT) // イタリア語
+    option --jp -Menv::setenv(LANG=ja_JP) // 日本語
+    option --kr -Menv::setenv(LANG=ko_KR) // 韓国語
+    option --br -Menv::setenv(LANG=pt_BR) // ポルトガル語 - ブラジル
+    option --es -Menv::setenv(LANG=es_ES) // スペイン語
+    option --ru -Menv::setenv(LANG=ru_RU) // ロシア語
+
+使用方法如下：
+
+    % date -Mi18n --tw
+    2017年10月22日 週日 18時00分00秒 JST
+
+可以在 F<~/.optex.d/optex.rc> 中声明自动加载模块：
+
+    autoload -Mi18n --cn --tw --us --fr --de --it --jp --kr --br --es --ru
+
+然后就可以在没有模块选项的情况下使用它们了。在这种情况下，选项 C<--ru> 会被 C<-Mi18n --ru> 自动替换。
+
+    % date --ru
+    воскресенье, 22 октября 2017 г. 18:00:00 (JST)
+
+模块 C<i18n> 作为 L<Getopt::EX::i18n> 实现，并包含在此发行版中。因此，无需额外安装，即可如上使用。
+
+=head1 STANDARD MODULES
+
+标准模块安装在 C<App::optex>，可以使用或不使用 C<App::optex>前缀。
+
+=over 4
+
+=item -MB<help>
+
+打印可用选项列表。选项名称与替换形式一起打印，如果已定义，则打印帮助信息。使用 B<-x> 选项可省略帮助信息。
+
+选项 B<--man> 或 B<-h> 将打印文件（如果有）。选项 B<-l> 将打印模块路径。选项 B<-m> 将显示模块本身。在其他模块之后使用时，将打印最后声明模块的信息。下一条命令将显示 B<second> 模块的文档。
+
+    optex -Mfirst -Msecond -Mhelp --man
+
+=item -MB<debug>
+
+打印调试信息。
+
+=item -MB<util::argv>
+
+操作命令参数的模块。详见 L<App::optex::util::argv>。
+
+=item -MB<util::filter>
+
+实现命令输入/输出过滤器的模块。详见 L<App::optex::util::filter>。
+
+=back
+
+=head1 Getopt::EX MODULES
+
+除自身模块外，B<optex> 还可以使用 C<Getopt::EX> 模块。已安装的标准 C<Getopt::EX> 模块如下。
+
+=over 4
+
+=item -MB<i18n> (L<Getopt::EX::i18n>)
+
+您可以通过以下操作显示希腊日历：
+
+    optex -Mi18n cal --gr
+
+=back
+
+=head1 OPTIONS
+
+从符号链接执行 B<optex> 时，这些选项无效。
+
+=over 4
+
+
+=item B<--link>, B<--ln> [ I<command> ]
+
+在 F<~/.optex.d/bin> 目录中创建符号链接。
+
+
+=item B<--unlink>, B<--rm> [ B<-f> ] [ I<command> ]
+
+删除 F<~/.optex.d/bin> 目录中的符号链接。
+
+
+=item B<--ls> [ B<-l> ] [ I<command> ]
+
+列出 F<~/.optex.d/bin> 目录中的符号链接文件。
+
+
+=item B<--rc> [ B<-l> ] [ B<-m> ] [ I<command> ]
+
+列出 F<~/.optex.d/bin> 目录中的 rc 文件。
+
+
+=item B<--nop>, B<-x> I<command>
+
+停止选项操作。否则使用完整路径名。
+
+
+=item B<-->[B<no>]B<module>
+
+B<optex> 默认处理目标命令的模块选项 (-M)。不过，有一条命令也使用相同的选项。选项 B<--nomodule> 会禁用这种行为。其他选项的解释仍然有效，在 rc 或模块文件中使用模块选项也没有问题。
+
+
+=item B<--exit> I<status>
+
+通常 B<optex> 会以已执行命令的状态退出。该选项会覆盖它，强制以指定的状态代码退出。
+
+
+=back
+
+
+=head1 CONFIGURATION FILE
+
+启动时，B<optex> 会读取配置文件 F<~/.optex.d/config.toml>，该文件应为 TOML 格式。
+
+=head2 PARAMETERS
+
+=over 4
+
+=item B<no-module>
+
+设置 B<optex> 不解释模块选项 B<-M> 的命令。如果在此列表中找到目标命令，就会像给 B<optex> 提供选项 B<--no-module> 一样执行该命令。
+
+    no-module = [
+        "greple",
+        "pgrep",
+    ]
+
+=item B<alias>
+
+设置命令别名。例如
+
+    [alias]
+        pgrep = [ "greple", "-Mperl", "--code" ]
+        hello = "echo -n 'hello world!'"
+
+命令别名可通过符号链接和命令参数调用。
+
+=back
+
+
+=head1 FILES AND DIRECTORIES
+
+=over 4
+
+
+=item F<PERLLIB/App/optex>
+
+系统模块目录。
+
+
+=item F<~/.optex.d/>
+
+个人根目录。
+
+
+=item F<~/.optex.d/config.toml>
+
+配置文件。
+
+
+=item F<~/.optex.d/default.rc>
+
+常用启动文件。
+
+
+=item F<~/.optex.d/>I<command>F<.rc>
+
+I<command> 的启动文件。
+
+
+=item F<~/.optex.d/>I<command>F</>
+
+I<command> 的模块目录。
+
+
+=item F<~/.optex.d/>I<command>F</default.pm>
+
+I<command> 的默认模块。
+
+
+=item F<~/.optex.d/bin>
+
+存储符号链接的默认目录。
+
+这并非必要，但将 B<optex> 设置为包含符号链接的特殊目录，并将其置于命令搜索路径中似乎是个好主意。这样你就可以很容易地从路径中添加/删除它，或创建/删除符号链接。
+
+=back
+
+
+=head1 ENVIRONMENT
+
+=over 4
+
+=item OPTEX_ROOT
+
+覆盖默认根目录 F<~/.optex.d>。
+
+=item OPTEX_CONFIG
+
+覆盖默认配置文件 F<OPTEX_ROOT/config.toml>。
+
+=item OPTEX_MODULE_PATH
+
+设置以冒号 (C<:>) 分隔的模块路径。这些路径将插入标准路径之前。
+
+=item OPTEX_BINDIR
+
+覆盖默认的符号链接目录 F<OPTEX_ROOT/bin>。
+
+=back
+
+
+=head1 SEE ALSO
+
+L<Getopt::EX>, L<Getopt::EX::Loader>, L<Getopt::EX::Module>
+
+L<App::optex::textconv>
+
+L<App::optex::xform>
+
+=head1 AUTHOR
+
+Kazumasa Utashiro
+
+
+=head1 LICENSE
+
+You can redistribute it and/or modify it under the same terms
+as Perl itself.
+
+Copyright ©︎ 2017-2024 Kazumasa Utashiro
+
+
+=cut

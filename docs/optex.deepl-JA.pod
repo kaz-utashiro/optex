@@ -1,0 +1,416 @@
+=encoding utf8
+
+=head1 NAME
+
+optex - 汎用コマンド・オプション・ラッパー
+
+=head1 SYNOPSIS
+
+B<optex> I<command> [ B<-M>I<module> ] ...
+
+または I<command> -> B<optex> シンボリックリンク、または
+
+B<optex> I<options> [ -l | -m ] ...
+
+    --link,   --ln  create symlink
+    --unlink, --rm  remove symlink
+    --ls            list link files
+    --rc            list rc files
+    --nop, -x       disable option processing
+    --[no]module    disable module option on arguments
+
+=cut
+=head1 DESCRIPTION
+
+B<optex>はPerlモジュールL<Getopt::EX>を利用した汎用コマンドオプション処理ラッパーです。これにより、ユーザはシステム上のあらゆるコマンドに対して独自のオプション・エイリアスを定義し、モジュール形式の拡張性を提供することができます。
+
+対象となるコマンドは引数として与えられます：
+
+    % optex command
+
+またはB<optex>へのシンボリックリンクファイルとして指定します：
+
+    command -> optex
+
+設定ファイルF<~/.optex.d/>I<コマンド>F<.rc>が存在する場合、実行前に評価され、コマンド引数はそれを使用して前処理されます。
+
+
+=head2 OPTION ALIASES
+
+C<-I[TIMESPEC]>オプションを持たないmacOSのC<date>コマンドを思い浮かべてほしい。B<optex>を使い、F<~/.optex.d/date.rc>ファイルに次のような設定をすることで実装できます。
+
+    option -I        -Idate
+    option -Idate    +%F
+    option -Iseconds +%FT%T%z
+    option -Iminutes +%FT%H:%M%z
+    option -Ihours   +%FT%H%z
+
+    option --iso-8601         -I
+    option --iso-8601=date    -Idate
+    option --iso-8601=seconds -Iseconds
+    option --iso-8601=minutes -Iminutes
+    option --iso-8601=hours   -Ihours
+
+次のコマンドは期待通りに動作します。
+
+    % optex date -Iseconds
+
+コマンドの検索パスにシンボリックリンクC<< date -> optex >>がある場合は、標準コマンドと同じように使用できますが、サポートされていないオプションがあります。
+
+    % date -Iseconds
+
+共通設定はF<~/.optex.d/default.rc>ファイルに保存され、これらのルールはB<optex>を介して実行されるすべてのコマンドに適用されます。
+
+実際には、C<--iso-8601>オプションはこのように簡単に定義できる：
+
+    option --iso-8601 -I$<shift>
+
+これはほとんどの場合うまくいくが、このようにC<--iso-8601>オプションだけを先行させると失敗する：
+
+    % date --iso-8601 -u
+
+=head2 COMMAND ALIASES
+
+コマンド・エイリアスは設定ファイルで次のように設定できる：
+
+    [alias]
+        pgrep = [ "greple", "-Mperl", "--code" ]
+
+エイリアス名はrcファイルとモジュールディレクトリを見つけるために使われます。上記の例では、F<~/.optex.d/pgrep.rc>とF<~/.optex.d/pgrep/>が参照されます。
+
+L<CONFIGURATION FILE>セクションを読んでください。
+
+=head2 MACROS
+
+複雑な文字列はマクロC<define>を使って合成できます。次の例は、テキスト中の母音を数えるawkスクリプトで、ファイルF<~/.optex.d/awk.rc>で宣言します。
+
+    define __delete__ /[bcdfgkmnpsrtvwyz]e( |$)/
+    define __match__  /ey|y[aeiou]*|[aeiou]+/
+    define __count_vowels__ <<EOS
+    {
+        s = tolower($0);
+        gsub(__delete__, " ", s);
+        for (count=0; match(s, __match__); count++) {
+            s=substr(s, RSTART + RLENGTH);
+        }
+        print count " " $0;
+    }
+    EOS
+    option --vowels __count_vowels__
+
+これは次のように使えます：
+
+    % awk --vowels /usr/share/dict/words
+
+複雑なオプションを設定するときは C<expand> ディレクティブが便利です。C<expand>はC<option>とほぼ同じ働きをしますが、ファイルスコープ内でのみ有効で、コマンドラインオプションには使えません。
+
+    expand repository	( -name .git -o -name .svn -o -name RCS )
+    expand no_dots	! -name .*
+    expand no_version	! -name *,v
+    expand no_backup	! -name *~
+    expand no_image 	! -iname *.jpg  ! -iname *.jpeg \
+			! -iname *.gif  ! -iname *.png
+    expand no_archive	! -iname *.tar  ! -iname *.tbz  ! -iname *.tgz
+    expand no_pdf	! -iname *.pdf
+
+    option --clean \
+            repository -prune -o \
+            -type f \
+            no_dots \
+            no_version no_backup \
+            no_image \
+            no_archive \
+            no_pdf
+
+    % find . --clean -print
+
+
+=head2 MODULES
+
+B<optex>はモジュール拡張にも対応しています。C<date>の例では、モジュールファイルはF<~/.optex.d/date/>ディレクトリにあります。もしデフォルトのモジュールF<~/.optex.d/date/default.pm>が存在すれば、実行の度に自動的にロードされます。
+
+これは通常のPerlモジュールなので、パッケージ宣言と最後の真値が必要です。この間にどんなPerlのコードを入れてもいいです。例えば、次のプログラムでは、C<date>コマンドを実行する前に、環境変数C<LANG>をC<C>に設定します。
+
+    package default;
+    $ENV{LANG} = 'C';
+    1;
+
+    % /bin/date
+    2017年 10月22日 日曜日 18時00分00秒 JST
+
+    % date
+    Sun Oct 22 18:00:00 JST 2017
+
+他のモジュールはC<-M>オプションを使ってロードします。他のオプションと異なり、C<-M>は引数リストの先頭に置かなければなりません。F<~/.optex.d/date/>ディレクトリにあるモジュールファイルは、C<date>コマンドでのみ使用されます。F<~/.optex.d/>ディレクトリにモジュールを置くと、すべてのコマンドから使用できます。
+
+C<Mes>モジュールを使用したい場合は、F<~/.optex.d/es.pm>に以下の内容のファイルを作成します。
+
+    package es;
+    $ENV{LANG} = 'es_ES';
+    1;
+
+    % date -Mes
+    domingo, 22 de octubre de 2017, 18:00:00 JST
+
+指定されたモジュールがライブラリパスに見つからなかった場合、B<optex>はそのオプションを無視し、直ちに引数処理を停止します。無視されたオプションはターゲットコマンドに渡されます。
+
+モジュールはサブルーチンコールでも使われます。F<~/.optex.d/env.pm>モジュールが次のようなものであるとする：
+
+    package env;
+    sub setenv {
+        while (($a, $b) = splice @_, 0, 2) {
+            $ENV{$a} = $b;
+        }
+    }
+    1;
+
+そして、より一般的な方法で使用することができます。次の例では、最初の書式は読みやすいですが、2番目の書式はエスケープする特殊文字がないので、より入力しやすくなっています。
+
+    % date -Menv::setenv(LANG=de_DE) # need shell quote
+    % date -Menv::setenv=LANG=de_DE  # alternative format
+    So 22 Okt 2017 18:00:00 JST
+
+オプション・エイリアスは、モジュール内のファイル末尾で、特殊リテラル C<__DATA__> に続けて宣言することもできます。これを使うと、異なる目的のために複数のオプション・セットを用意することができます。一般的なB<i18n>モジュールを考えてみよう：
+
+    package i18n;
+    1;
+    __DATA__
+    option --cn -Menv::setenv(LANG=zh_CN) // 中国語 - 簡体字
+    option --tw -Menv::setenv(LANG=zh_TW) // 中国語 - 繁体字
+    option --us -Menv::setenv(LANG=en_US) // 英語
+    option --fr -Menv::setenv(LANG=fr_FR) // フランス語
+    option --de -Menv::setenv(LANG=de_DE) // ドイツ語
+    option --it -Menv::setenv(LANG=it_IT) // イタリア語
+    option --jp -Menv::setenv(LANG=ja_JP) // 日本語
+    option --kr -Menv::setenv(LANG=ko_KR) // 韓国語
+    option --br -Menv::setenv(LANG=pt_BR) // ポルトガル語 - ブラジル
+    option --es -Menv::setenv(LANG=es_ES) // スペイン語
+    option --ru -Menv::setenv(LANG=ru_RU) // ロシア語
+
+これは次のような使い方ができる：
+
+    % date -Mi18n --tw
+    2017年10月22日 週日 18時00分00秒 JST
+
+F<~/.optex.d/optex.rc>の中でautoloadモジュールを宣言する：
+
+    autoload -Mi18n --cn --tw --us --fr --de --it --jp --kr --br --es --ru
+
+それから、moduleオプションなしで使用することができます。この場合、オプションC<--ru>は自動的にC<-Mi18n --ru>に置き換えられます。
+
+    % date --ru
+    воскресенье, 22 октября 2017 г. 18:00:00 (JST)
+
+モジュールC<i18n>はL<Getopt::EX::i18n>として実装され、本ディストリビューションに含まれています。そのため、追加インストールすることなく、上記のように使用することができます。
+
+=head1 STANDARD MODULES
+
+標準モジュールはC<App::optex>にインストールされ、C<App::optex>接頭辞の有無にかかわらず対応できます。
+
+=over 4
+
+=item -MB<help>
+
+利用可能なオプションリストを表示します。オプション名は、置換形式、または定義されていればヘルプメッセージとともに表示されます。ヘルプメッセージを省略するには B<-x> オプションを使います。
+
+オプション B<--man> または B<-h> は、利用可能であればドキュメントを表示します。オプション B<-l> はモジュールパスを表示します。オプション B<-m> はモジュールそのものを表示します。他のモジュールの後に使われた場合は、最後に宣言されたモジュールに関する情報を表示します。次のコマンドは B<second> モジュールに関するドキュメントを表示します。
+
+    optex -Mfirst -Msecond -Mhelp --man
+
+=item -MB<debug>
+
+デバッグメッセージを表示します。
+
+=item -MB<util::argv>
+
+コマンド引数を操作するモジュール。詳しくはL<App::optex::util::argv>を参照してください。
+
+=item -MB<util::filter>
+
+コマンド入出力フィルタを実装するモジュール。詳しくはL<App::optex::util::filter>を参照してください。
+
+=back
+
+=head1 Getopt::EX MODULES
+
+B<optex>は、独自のモジュールに加えて、C<Getopt::EX>モジュールを使用することもできます。標準的にインストールされているC<Getopt::EX>モジュールは以下のものです。
+
+=over 4
+
+=item -MB<i18n> (L<Getopt::EX::i18n>)
+
+以下のようにするとギリシャ暦を表示することができます：
+
+    optex -Mi18n cal --gr
+
+=back
+
+=head1 OPTIONS
+
+これらのオプションは、B<optex>がシンボリックリンクから実行された場合には有効ではありません。
+
+=over 4
+
+
+=item B<--link>, B<--ln> [ I<command> ]
+
+F<~/.optex.d/bin>ディレクトリにシンボリックリンクを作成します。
+
+
+=item B<--unlink>, B<--rm> [ B<-f> ] [ I<command> ]
+
+F<~/.optex.d/bin>ディレクトリのシンボリックリンクを削除します。
+
+
+=item B<--ls> [ B<-l> ] [ I<command> ]
+
+F<~/.optex.d/bin>ディレクトリのシンボリックリンクファイルをリストします。
+
+
+=item B<--rc> [ B<-l> ] [ B<-m> ] [ I<command> ]
+
+F<~/.optex.d>ディレクトリのrcファイルをリストします。
+
+
+=item B<--nop>, B<-x> I<command>
+
+オプション操作を停止します。それ以外はフルパス名を使用します。
+
+
+=item B<-->[B<no>]B<module>
+
+B<optex>はデフォルトでターゲットコマンドのモジュールオプション(-M)を扱う。しかし、同じオプションを独自の目的で使用するコマンドもあります。B<--nomodule> オプションはその動作を無効にします。他のオプションの解釈は有効であり、rcファイルやモジュールファイルでmoduleオプションを使用しても問題はありません。
+
+
+=item B<--exit> I<status>
+
+通常、B<optex>はコマンドを実行した状態で終了します。このオプションはそれを上書きし、指定したステータスコードで強制終了します。
+
+
+=back
+
+
+=head1 CONFIGURATION FILE
+
+B<optex>は起動時にTOML形式で書かれた設定ファイルF<~/.optex.d/config.toml>を読み込みます。
+
+=head2 PARAMETERS
+
+=over 4
+
+=item B<no-module>
+
+B<optex>がモジュールオプションB<-M>を解釈しないコマンドを設定します。B<optex>がモジュールオプションB<--no-module>を解釈しないコマンドを設定します。
+
+    no-module = [
+        "greple",
+        "pgrep",
+    ]
+
+=item B<alias>
+
+コマンド・エイリアスを設定します。例
+
+    [alias]
+        pgrep = [ "greple", "-Mperl", "--code" ]
+        hello = "echo -n 'hello world!'"
+
+コマンドエイリアスは、シンボリックリンクとコマンド引数から呼び出すことができます。
+
+=back
+
+
+=head1 FILES AND DIRECTORIES
+
+=over 4
+
+
+=item F<PERLLIB/App/optex>
+
+システムモジュールディレクトリ
+
+
+=item F<~/.optex.d/>
+
+個人用ルートディレクトリ
+
+
+=item F<~/.optex.d/config.toml>
+
+設定ファイル
+
+
+=item F<~/.optex.d/default.rc>
+
+共通スタートアップファイル
+
+
+=item F<~/.optex.d/>I<command>F<.rc>
+
+I<コマンド>のスタートアップファイル
+
+
+=item F<~/.optex.d/>I<command>F</>
+
+I<コマンド>のモジュール・ディレクトリ
+
+
+=item F<~/.optex.d/>I<command>F</default.pm>
+
+I<コマンド>のデフォルトモジュール
+
+
+=item F<~/.optex.d/bin>
+
+シンボリックリンクを格納するデフォルトのディレクトリ。
+
+これは必要ませんが、B<optex>のシンボリックリンクを格納する特別なディレクトリを作り、コマンドの検索パスに置くとよい。そうすれば、パスからの追加/削除やシンボリックリンクの作成/削除が簡単にできます。
+
+=back
+
+
+=head1 ENVIRONMENT
+
+=over 4
+
+=item OPTEX_ROOT
+
+デフォルトのルートディレクトリF<~/.optex.d>を上書きします。
+
+=item OPTEX_CONFIG
+
+デフォルトの設定ファイル F<OPTEX_ROOT/config.toml> を上書きします。
+
+=item OPTEX_MODULE_PATH
+
+コロン(C<:>)で区切られたモジュールパスを設定します。これらは標準パスの前に挿入されます。
+
+=item OPTEX_BINDIR
+
+デフォルトのシンボリックリンクディレクトリ F<OPTEX_ROOT/bin> を上書きします。
+
+=back
+
+
+=head1 SEE ALSO
+
+L<Getopt::EX>, L<Getopt::EX::Loader>, L<Getopt::EX::Module>
+
+L<App::optex::textconv>
+
+L<App::optex::xform>
+
+=head1 AUTHOR
+
+Kazumasa Utashiro
+
+
+=head1 LICENSE
+
+You can redistribute it and/or modify it under the same terms
+as Perl itself.
+
+Copyright ©︎ 2017-2024 Kazumasa Utashiro
+
+
+=cut
