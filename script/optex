@@ -10,6 +10,10 @@ my $version = $App::optex::VERSION;
 
 optex - General purpose command option wrapper
 
+=head1 VERSION
+
+Version 1.00
+
 =head1 SYNOPSIS
 
 B<optex> I<command> [ B<-M>I<module> ] ...

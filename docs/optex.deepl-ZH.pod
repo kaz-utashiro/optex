@@ -4,6 +4,10 @@
 
 optex - 通用命令选项包装器
 
+=head1 VERSION
+
+Version 1.00
+
 =head1 SYNOPSIS
 
 B<optex> I<command> [ B<-M>I<module> ] ...

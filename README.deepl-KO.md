@@ -2,6 +2,10 @@
 
 optex - 범용 명령 옵션 래퍼
 
+# VERSION
+
+Version 1.00
+
 # SYNOPSIS
 
 **옵텍스** _명령_ \[ **-M**_모듈_ \] ...

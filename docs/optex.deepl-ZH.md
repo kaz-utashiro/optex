@@ -2,6 +2,10 @@
 
 optex - 通用命令选项包装器
 
+# VERSION
+
+Version 1.00
+
 # SYNOPSIS
 
 **optex** _command_ \[ **-M**_module_ \] ...

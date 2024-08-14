@@ -2,6 +2,10 @@
 
 optex - General purpose command option wrapper
 
+# VERSION
+
+Version 1.00
+
 # SYNOPSIS
 
 **optex** _command_ \[ **-M**_module_ \] ...

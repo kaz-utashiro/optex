@@ -1,13 +1,18 @@
-name = "App-optex"
-readme_from = "script/optex"
+name          = "App-optex"
+readme_from   = "script/optex"
 abstract_from = "script/optex"
-script_files = [ "script/optex" ]
-# badges = ["travis"]
-authority="cpan:UTASHIRO"
+script_files  = [ "script/optex" ]
+authority     = "cpan:UTASHIRO"
 
-module_maker="ModuleBuildTiny"
+module_maker = "ModuleBuildTiny"
 
 [unsupported]
 os = [
     "MSWin32",
+]
+
+[release]
+branch = 'master'
+hooks = [
+    "make -C docs",
 ]

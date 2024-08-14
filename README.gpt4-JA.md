@@ -2,6 +2,10 @@
 
 optex - 汎用コマンドオプションラッパー
 
+# VERSION
+
+Version 1.00
+
 # SYNOPSIS
 
 **optex** _コマンド_ \[ **-M**_モジュール_ \] ...

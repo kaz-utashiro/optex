@@ -4,6 +4,10 @@
 
 optex - 범용 명령 옵션 래퍼
 
+=head1 VERSION
+
+Version 1.00
+
 =head1 SYNOPSIS
 
 B<옵텍스> I<명령> [ B<-M>I<모듈> ] ...

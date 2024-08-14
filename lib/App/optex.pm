@@ -2,7 +2,7 @@ package App::optex;
 use strict;
 use warnings;
 
-our $VERSION = "v0.99.2";
+our $VERSION = "1.00";
 
 1;
 
