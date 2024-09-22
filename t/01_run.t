@@ -21,15 +21,11 @@ is(optex('-Mhelp', 'true'),  0, '-Mhelp');
 is(optex('-MApp::optex::help', 'true'),  0, '-MApp::optex::help');
 is(optex('-Mdebug', 'true'),  0, '-Mdebug');
 is(optex('-Mutil', 'true'),  0, '-Mutil');
-
 TODO: {
     local $TODO = 'LOAD ERROR -Mutil::filter';
     is(optex('-Mutil::filter', 'true'),  0, '-Mutil::filter');
 }
-TODO: {
-    local $TODO = 'LOAD ERROR -Mutil::argv';
-    is(optex('-Mutil::argv', 'true'),  0, '-Mutil::argv');
-}
+is(optex('-Mutil::argv', 'true'),  0, '-Mutil::argv');
 
 isnt(optex('false'),  0, 'false');
 is(optex('--exit=0', 'false'),  0, '--exit=0');

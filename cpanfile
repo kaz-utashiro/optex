@@ -9,6 +9,7 @@ requires 'TOML', '0.95';
 requires 'Text::VisualWidth::PP', '0.05';
 requires 'Text::ANSI::Tabs', '1.04';
 requires 'Time::Piece';
+requires 'Text::Glob';
 
 on 'test' => sub {
     requires 'Test::More', '0.98';
