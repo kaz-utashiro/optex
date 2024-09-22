@@ -82,14 +82,31 @@ option preceding other option like this:
 
 ## COMMAND ALIASES
 
-Command aliases can be set in the configuration file like this:
+**optex**'s command alias is no different from the alias function of
+shell, but it is effective in that it can be executed as a command
+from a tool or script, and can be managed collectively in a
+configuration file.
+
+Command aliases can be set in the configuration file
+(`~/.optex.d/config.toml`) like this:
 
     [alias]
-        pgrep = [ "greple", "-Mperl", "--code" ]
+        tc = "optex -Mtextconv"
+
+You can make symbolic link from `tc` to `optex` like this:
+
+    % optex --ln tc
+
+And include `$HOME/.optex.d/bin` in your `PATH` evnironment.
+
+The `textconv` module can be used to convert files given as arguments
+to plain text.  Defined in this way, Word files can be compared as
+follows.
+
+    % tc diff A.docx B.docx
 
 Alias name is used to find rc file and module directory.  In the above
-example, `~/.optex.d/pgrep.rc` and `~/.optex.d/pgrep/` will be
-referred.
+example, `~/.optex.d/tc.rc` and `~/.optex.d/tc/` will be referred.
 
 Read ["CONFIGURATION FILE"](#configuration-file) section.
 
@@ -258,7 +275,7 @@ addressed with and without `App::optex` prefix.
     last declared module.  Next command show the document about **second**
     module.
 
-        optex -Mfirst -Msecond -Mhelp --man
+        % optex -Mfirst -Msecond -Mhelp --man
 
 - -M**debug**
 
