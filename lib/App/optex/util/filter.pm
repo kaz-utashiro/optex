@@ -10,6 +10,10 @@ use open IO => 'utf8', ':std';
 use Hash::Util qw(lock_keys);
 use Data::Dumper;
 
+use Exporter 'import';
+our @EXPORT;
+our @EXPORT_OK;
+
 my($mod, $argv);
 
 sub initialize {
@@ -125,20 +129,27 @@ sub io_filter (&@) {
     exit 0;
 }
 
+push @EXPORT_OK, 'io_filter';
+
 sub set {
-    my %opt = @_;
+    my  %opt = @_;
+    our @waitpids;
     for my $io (qw(PREFORK STDIN STDOUT STDERR)) {
 	my $filter = delete $opt{$io} // next;
+	my $pid;
 	if ($filter =~ s/^&//) {
 	    if ($filter !~ /::/) {
 		$filter = join '::', __PACKAGE__, $filter;
 	    }
 	    use Getopt::EX::Func qw(parse_func);
 	    my $func = parse_func($filter);
-	    io_filter { $func->call() } $io => 1;
+	    $pid = io_filter { $func->call() } $io => 1;
 	}
 	else {
-	    io_filter { exec $filter or die "exec: $!\n" } $io => 1;
+	    $pid = io_filter { exec $filter or die "exec: $!\n" } $io => 1;
+	}
+	if ($io eq 'STDOUT' or $io eq 'STDERR') {
+	    push @waitpids, $pid;
 	}
     }
     %opt and die "Unknown parameter: " . Dumper \%opt;
@@ -167,6 +178,8 @@ sub unctrl {
 	print;
     }
 }
+
+push @EXPORT_OK, 'unctrl';
 
 =item B<unctrl>()
 
@@ -251,6 +264,8 @@ sub visible {
     }
 }
 
+push @EXPORT_OK, 'visible';
+
 =item B<visible>(I<name>=I<flag>)
 
 Make control and space characters visible.
@@ -299,6 +314,8 @@ sub rev_line {
     print reverse <STDIN>;
 }
 
+push @EXPORT_OK, 'rev_line';
+
 =item B<rev_line>()
 
 Reverse output.
@@ -314,6 +331,8 @@ sub rev_char {
     }
 }
 
+push @EXPORT_OK, 'rev_char';
+
 =item B<rev_char>()
 
 Reverse characters in each line.
@@ -328,9 +347,35 @@ sub shuffle_line {
     print shuffle <>;
 }
 
+push @EXPORT_OK, 'shuffle';
+
 =item B<shuffle_line>()
 
 Shuffle lines.
+
+=cut
+
+######################################################################
+
+use Time::HiRes qw(usleep);
+
+sub interval {
+    my %opt = @_;
+    $opt{time} //= 1;
+    my $sleep = $opt{time} > 0 ? $opt{time} * 1000000 : 0;
+    io_filter {
+	while (<>) {
+	    print;
+	    usleep $sleep;
+	}
+    } STDOUT => 1 if $sleep > 0;
+}
+
+push @EXPORT_OK, 'interval';
+
+=item B<interval>()
+
+Output each line at regular intervals of time.
 
 =cut
 
@@ -350,6 +395,8 @@ sub io_color {
     }
     ();
 }
+
+push @EXPORT_OK, 'io_color';
 
 =item B<io_color>( B<IO>=I<color> )
 
@@ -410,6 +457,8 @@ sub timestamp {
     }
 }
 
+push @EXPORT_OK, 'timestamp';
+
 =item B<timestamp>( [ format=I<strftime_format> ] )
 
 Put timestamp on each line of output.
@@ -426,6 +475,8 @@ precision.
 sub gunzip { exec "gunzip -c" }
 
 sub gzip   { exec "gzip -c" }
+
+push @EXPORT_OK, 'gunzip', 'gzip';
 
 =item B<gunzip>()
 
