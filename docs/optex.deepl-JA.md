@@ -4,7 +4,7 @@ optex - 汎用コマンド・オプション・ラッパー
 
 # VERSION
 
-Version 1.00
+Version 1.01
 
 # SYNOPSIS
 
@@ -71,12 +71,25 @@ Version 1.00
 
 ## COMMAND ALIASES
 
-コマンド・エイリアスは設定ファイルで次のように設定できる：
+**optex**のコマンドエイリアスは、シェルのエイリアス機能と変わりませんが、ツールやスクリプトからコマンドとして実行でき、設定ファイルで一括管理できる点が効果的です。
+
+コマンドエイリアスは設定ファイルで設定できる
+(`~/.optex.d/config.toml`) like this:
 
     [alias]
-        pgrep = [ "greple", "-Mperl", "--code" ]
+        tc = "optex -Mtextconv"
 
-エイリアス名はrcファイルとモジュールディレクトリを見つけるために使われます。上記の例では、`~/.optex.d/pgrep.rc`と`~/.optex.d/pgrep/`が参照されます。
+このように`tc`から`optex`へシンボリックリンクを張ることができる：
+
+    % optex --ln tc
+
+また、`$HOME/.optex.d/bin`を`PATH`環境にインクルードします。
+
+`textconv`モジュールは、引数として与えられたファイルをプレーンテキストに変換するために使うことができます。このように定義すると、Wordファイルは次のように比較できます。
+
+    % tc diff A.docx B.docx
+
+エイリアス名はrcファイルとモジュール・ディレクトリを見つけるために使われます。上の例では、`~/.optex.d/tc.rc`と`~/.optex.d/tc/`が参照されます。
 
 ["CONFIGURATION FILE"](#configuration-file)セクションを読んでください。
 
@@ -212,7 +225,7 @@ Version 1.00
 
     オプション **--man** または **-h** は、利用可能であればドキュメントを表示します。オプション **-l** はモジュールパスを表示します。オプション **-m** はモジュールそのものを表示します。他のモジュールの後に使われた場合は、最後に宣言されたモジュールに関する情報を表示します。次のコマンドは **second** モジュールに関するドキュメントを表示します。
 
-        optex -Mfirst -Msecond -Mhelp --man
+        % optex -Mfirst -Msecond -Mhelp --man
 
 - -M**debug**
 

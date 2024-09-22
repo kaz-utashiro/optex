@@ -4,7 +4,7 @@ optex - 범용 명령 옵션 래퍼
 
 # VERSION
 
-Version 1.00
+Version 1.01
 
 # SYNOPSIS
 
@@ -71,12 +71,25 @@ Version 1.00
 
 ## COMMAND ALIASES
 
-명령 별칭은 구성 파일에서 다음과 같이 설정할 수 있습니다:
+**옵텍스**의 명령어 별칭은 셸의 별칭 기능과 다르지 않지만, 도구나 스크립트에서 명령어로 실행할 수 있고 설정 파일에서 일괄적으로 관리할 수 있다는 점에서 효과적입니다.
+
+명령 별칭은 설정 파일에서 설정할 수 있습니다.
+(`~/.optex.d/config.toml`) like this:
 
     [alias]
-        pgrep = [ "greple", "-Mperl", "--code" ]
+        tc = "optex -Mtextconv"
 
-별칭 이름은 rc 파일과 모듈 디렉토리를 찾는 데 사용됩니다. 위의 예에서는 `~/.optex.d/pgrep.rc`와 `~/.optex.d/pgrep/`가 참조됩니다.
+`tc`에서 `옵텍스`로 다음과 같이 심볼릭 링크를 만들 수 있습니다:
+
+    % optex --ln tc
+
+그리고 `PATH` 환경 설정에 `$HOME/.optex.d/bin`을 포함하세요.
+
+`textconv` 모듈은 인자로 지정된 파일을 일반 텍스트로 변환하는 데 사용할 수 있습니다. 이렇게 정의된 Word 파일은 다음과 같이 비교할 수 있습니다.
+
+    % tc diff A.docx B.docx
+
+별칭 이름은 rc 파일 및 모듈 디렉토리를 찾는 데 사용됩니다. 위의 예에서는 `~/.optex.d/tc.rc`와 `~/.optex.d/tc/`가 참조됩니다.
 
 ["구성 파일"](#구성-파일) 섹션을 읽습니다.
 
@@ -212,7 +225,7 @@ Version 1.00
 
     옵션 **--맨** 또는 **-h**는 사용 가능한 경우 문서를 인쇄합니다. 옵션 **-l**은 모듈 경로를 인쇄합니다. **-m** 옵션은 모듈 자체를 표시합니다. 다른 모듈 뒤에 사용하면 마지막으로 선언된 모듈에 대한 정보를 인쇄합니다. 다음 명령은 **초** 모듈에 대한 문서를 표시합니다.
 
-        optex -Mfirst -Msecond -Mhelp --man
+        % optex -Mfirst -Msecond -Mhelp --man
 
 - -M**debug**
 

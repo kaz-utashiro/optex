@@ -6,7 +6,7 @@ optex - 汎用コマンド・オプション・ラッパー
 
 =head1 VERSION
 
-Version 1.00
+Version 1.01
 
 =head1 SYNOPSIS
 
@@ -75,12 +75,25 @@ C<-I[TIMESPEC]>オプションを持たないmacOSのC<date>コマンドを思�
 
 =head2 COMMAND ALIASES
 
-コマンド・エイリアスは設定ファイルで次のように設定できる：
+B<optex>のコマンドエイリアスは、シェルのエイリアス機能と変わりませんが、ツールやスクリプトからコマンドとして実行でき、設定ファイルで一括管理できる点が効果的です。
+
+コマンドエイリアスは設定ファイルで設定できる
+(F<~/.optex.d/config.toml>) like this:
 
     [alias]
-        pgrep = [ "greple", "-Mperl", "--code" ]
+        tc = "optex -Mtextconv"
 
-エイリアス名はrcファイルとモジュールディレクトリを見つけるために使われます。上記の例では、F<~/.optex.d/pgrep.rc>とF<~/.optex.d/pgrep/>が参照されます。
+このようにC<tc>からC<optex>へシンボリックリンクを張ることができる：
+
+    % optex --ln tc
+
+また、F<$HOME/.optex.d/bin>をC<PATH>環境にインクルードします。
+
+C<textconv>モジュールは、引数として与えられたファイルをプレーンテキストに変換するために使うことができます。このように定義すると、Wordファイルは次のように比較できます。
+
+    % tc diff A.docx B.docx
+
+エイリアス名はrcファイルとモジュール・ディレクトリを見つけるために使われます。上の例では、F<~/.optex.d/tc.rc>とF<~/.optex.d/tc/>が参照されます。
 
 L<CONFIGURATION FILE>セクションを読んでください。
 
@@ -219,7 +232,7 @@ F<~/.optex.d/optex.rc>の中でautoloadモジュールを宣言する：
 
 オプション B<--man> または B<-h> は、利用可能であればドキュメントを表示します。オプション B<-l> はモジュールパスを表示します。オプション B<-m> はモジュールそのものを表示します。他のモジュールの後に使われた場合は、最後に宣言されたモジュールに関する情報を表示します。次のコマンドは B<second> モジュールに関するドキュメントを表示します。
 
-    optex -Mfirst -Msecond -Mhelp --man
+    % optex -Mfirst -Msecond -Mhelp --man
 
 =item -MB<debug>
 

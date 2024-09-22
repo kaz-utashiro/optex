@@ -4,7 +4,7 @@ optex - 汎用コマンドオプションラッパー
 
 # VERSION
 
-Version 1.00
+Version 1.01
 
 # SYNOPSIS
 
@@ -71,12 +71,25 @@ macOSの`date`コマンドを考えてみましょう。これには`-I[TIMESPEC
 
 ## COMMAND ALIASES
 
-コマンドエイリアスは設定ファイルでこのように設定できます：
+**optex**のコマンドエイリアスはシェルのエイリアス機能と変わりませんが、ツールやスクリプトからコマンドとして実行できる点、設定ファイルで一括管理できる点が有効です。
+
+設定ファイルでコマンドエイリアスを設定できます
+(`~/.optex.d/config.toml`) like this:
 
     [alias]
-        pgrep = [ "greple", "-Mperl", "--code" ]
+        tc = "optex -Mtextconv"
 
-エイリアス名はrcファイルとモジュールディレクトリを見つけるために使用されます。上記の例では、`~/.optex.d/pgrep.rc`と`~/.optex.d/pgrep/`が参照されます。
+次のように`tc`から`optex`へのシンボリックリンクを作成できます：
+
+    % optex --ln tc
+
+そして、`$HOME/.optex.d/bin`をあなたの`PATH`環境に含めます。
+
+`textconv`モジュールは、引数として与えられたファイルをプレーンテキストに変換するために使用できます。このように定義すると、Wordファイルは次のように比較できます。
+
+    % tc diff A.docx B.docx
+
+エイリアス名はrcファイルとモジュールディレクトリを見つけるために使用されます。上記の例では、`~/.optex.d/tc.rc`と`~/.optex.d/tc/`が参照されます。
 
 ["CONFIGURATION FILE"](#configuration-file)セクションを読んでください。
 
@@ -212,7 +225,7 @@ macOSの`date`コマンドを考えてみましょう。これには`-I[TIMESPEC
 
     オプション **--man** または **-h** は、利用可能であればドキュメントを印刷します。オプション **-l** はモジュールパスを印刷します。オプション **-m** はモジュール自体を表示します。他のモジュールの後に使用された場合、最後に宣言されたモジュールについての情報を印刷します。次のコマンドは **second** モジュールについてのドキュメントを表示します。
 
-        optex -Mfirst -Msecond -Mhelp --man
+        % optex -Mfirst -Msecond -Mhelp --man
 
 - -M**debug**
 

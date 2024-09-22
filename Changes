@@ -2,6 +2,13 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+1.01 2024-09-22T09:55:50Z
+
+    - use $ENV{DEBUG_OPTEX}
+    - do not remove ~/.optex.d/bin from PATH
+    - update collect function in -Mutil::argv module
+    - introduce interval() function and makes them exportable in -Mutil::filter
+
 1.00 2024-08-14T05:04:07Z
 
     - release 1.00

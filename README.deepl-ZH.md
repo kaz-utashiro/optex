@@ -4,7 +4,7 @@ optex - 通用命令选项包装器
 
 # VERSION
 
-Version 1.00
+Version 1.01
 
 # SYNOPSIS
 
@@ -71,12 +71,25 @@ Version 1.00
 
 ## COMMAND ALIASES
 
-命令别名可以在配置文件中这样设置：
+**optex** 的命令别名与 shell 的别名功能并无不同，但它的高效之处在于可以作为工具或脚本的命令执行，并可在配置文件中进行统一管理。
+
+可以在配置文件中设置命令别名
+(`~/.optex.d/config.toml`) like this:
 
     [alias]
-        pgrep = [ "greple", "-Mperl", "--code" ]
+        tc = "optex -Mtextconv"
 
-别名用于查找 rc 文件和模块目录。在上例中，将引用 `~/.optex.d/pgrep.rc` 和 `~/.optex.d/pgrep/`。
+可以像这样从 `tc` 建立符号链接到 `optex`：
+
+    % optex --ln tc
+
+并在 `PATH` 环境中包含 `$HOME/.optex.d/bin`。
+
+`textconv` 模块可用于将作为参数给定的文件转换为纯文本。以这种方式定义的 Word 文件可按如下方式进行比较。
+
+    % tc diff A.docx B.docx
+
+别名用于查找 rc 文件和模块目录。在上例中，将引用 `~/.optex.d/tc.rc` 和 `~/.optex.d/tc/`。
 
 请阅读 ["CONFIGURATION FILE"](#configuration-file) 部分。
 
@@ -212,7 +225,7 @@ Version 1.00
 
     选项 **--man** 或 **-h** 将打印文件（如果有）。选项 **-l** 将打印模块路径。选项 **-m** 将显示模块本身。在其他模块之后使用时，将打印最后声明模块的信息。下一条命令将显示 **second** 模块的文档。
 
-        optex -Mfirst -Msecond -Mhelp --man
+        % optex -Mfirst -Msecond -Mhelp --man
 
 - -M**debug**
 
