@@ -25,7 +25,10 @@ my %options = (
     "exch"   => "\$<move(1,1)>",
     "times"     => "-M__PACKAGE__::times(count=\$<shift>) \$<move>",
     "reverse"   => "-M__PACKAGE__::reverse() \$<move>",
-    "collect"   => "-M__PACKAGE__::collect(index=\$<shift>) \$<move>",
+    "index"     => "-M__PACKAGE__::collect(index=\$<shift>) \$<move>",
+    "glob"      => "-M__PACKAGE__::collect(glob=\$<shift>) \$<move>",
+    "include"   => "-M__PACKAGE__::collect(include=\$<shift>) \$<move>",
+    "exclude"   => "-M__PACKAGE__::collect(exclude=\$<shift>) \$<move>",
     "filter"    => "-M__PACKAGE__::filter(command=\$<shift>) \$<move>",
     );
 
@@ -116,23 +119,80 @@ Reverse arguments.
 
 ######################################################################
 
+use Text::Glob qw(glob_to_regex);
+use File::Basename qw(basename);
+
 sub collect {
     my %opt = @_;
-    my @index = $opt{index} =~ /\d+/g;
-    argv {
-	@_[ grep { $_ <= $#_ } map { $_ - 1 } @index ];
-    };
+    if ($opt{index}) {
+	my @index = $opt{index} =~ /\d+/g;
+	argv {
+	    @_[ grep { $_ <= $#_ } map { $_ - 1 } @index ];
+	};
+    }
+    elsif (my $glob = $opt{glob}) {
+	my $re = glob_to_regex($glob);
+	argv {
+	    grep { !-e or basename($_) =~ /$re/ } @_;
+	};
+    }
+    elsif (my $pattern = $opt{include}) {
+	argv {
+	    grep { !-e or /$pattern/ } @_;
+	};
+    }
+    elsif (my $exclude = $opt{exclude}) {
+	argv {
+	    grep { !-e or !/$exclude/ } @_;
+	};
+    }
 }
 
 =item B<collect>(index=2:4:6)
 
-Collect arguments.
+=item B<collect>(glob=*.c)
 
-    % optex echo -Mutil::argv::collect(index=2:4:6) 1 2 3 4 5 6
+=item B<collect>(include=.c$)
+
+=item B<collect>(exclude=.c$)
+
+Collect arguments based on the given parameter.
+
+=over 4
+
+=item B<index>
+
+    % optex echo -Mutil::argv::collect(index=2:4:6) ichi ni san shi go roku
 
 will print:
 
-    2 4 6
+    ni shi roku
+
+=item B<glob>
+
+    % optex ls -Mutil::argv::collect(glob=*.c) foo.h foo.c foo.1
+
+will print:
+
+    foo.c
+
+=item B<include>
+
+    % optex ls -Mutil::argv::collect(include=.c$) foo.h foo.c foo.1
+
+will print:
+
+    foo.c
+
+=item B<exclude>
+
+    % optex ls -Mutil::argv::collect(exclude=.c$) foo.h foo.c foo.1
+
+will print:
+
+    foo.h foo.1
+
+=back
 
 =cut
 
