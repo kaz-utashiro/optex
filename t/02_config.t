@@ -28,6 +28,7 @@ no-module = [
 ]
 
 [alias]
+	quadruple = "double 2 *"
 	double = "expr 2 *"
 	hello = "echo 'hello  world'"
 
@@ -67,7 +68,7 @@ symlink $^X, "${bindir}/perl"
     or do { warn "symlink $^X: $!"; goto FINISH };
 
 ## command links
-for my $command (qw(echo double hello)) {
+for my $command (qw(echo double quadruple hello)) {
     my $file = "${bindir}/${command}";
     symlink $bin, $file
 	or do { warn "symlink $file: $!"; goto FINISH };
@@ -76,6 +77,8 @@ for my $command (qw(echo double hello)) {
 stdout_is_eq( [ 'echo', '-M' ], "-M\n", 'symlink, no-module' );
 
 stdout_is_eq( [ 'double',  '2' ], "4\n", 'symlink, alias' );
+
+stdout_is_eq( [ 'quadruple',  '2' ], "8\n", 'symlink, alias' );
 
 stdout_is_eq( [ 'hello' ], "hello  world\n", 'symlink, alias string' );
 

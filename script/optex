@@ -189,14 +189,7 @@ unless ($no_operation) {
     $rcloader->deal_with(\@ARGV);
 }
 
-##
-## setup PATH
-##
-$ENV{PATH} = join(':',
-		  grep { not remove_path($_) }
-		  split /:+/, $ENV{PATH});
-
-my $exec_name = $aliased_name || $target_name;
+my $exec_name = $aliased_name || search_path($target_name);
 
 warn "$abs_name: exec $exec_name @ARGV\n" if $debug;
 
@@ -223,21 +216,14 @@ sub load_rc {
     warn "$abs_name: load $rc\n" if $debug;
 }
 
-sub remove_path {
-    my $dir = shift;
-    -d $dir or return 0; # useless, but harmless.
-    if (($cmd_name ne $abs_name) and (abs_path($dir) eq $cmd_dir)) {
-	warn "$abs_name($$): remove $dir from PATH.\n" if $debug;
-	return 1;
+sub search_path {
+    my $new = shift;
+    for my $path (split /:+/, $ENV{PATH}) {
+	-x "$path/$new" or next;
+	next if $path eq $cmd_dir and $new eq $cmd_name;
+	return "$path/$new";
     }
-    my $path = "$dir/$target_name";
-    -l $path or return 0;
-    my $link = readlink $path or return 1; # impossible?
-    if ($link =~ m:/$abs_name$:o) {
-	warn "optex($$): remove $dir from PATH.\n" if $debug;
-	return 1;
-    }
-    return 0;
+    return $new;
 }
 
 sub self_option {
