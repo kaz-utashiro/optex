@@ -52,7 +52,7 @@ binmode STDOUT, ":encoding(utf8)";
 binmode STDERR, ":encoding(utf8)";
 
 our $rcloader;
-our $debug;
+our $debug //= $ENV{DEBUG_OPTEX};
 our $no_operation;
 our $mod_opt = '-M';
 our $mod_arg = 1;	# Process -M option in target command
