@@ -108,6 +108,26 @@ follows.
 Alias name is used to find rc file and module directory.  In the above
 example, `~/.optex.d/tc.rc` and `~/.optex.d/tc/` will be referred.
 
+It is also possible to write shell scripts in the config file.  The
+following example implements the C-shell `repeat` command.
+
+    [alias]
+            repeat = [ 'bash', '-c', '''
+                while getopts 'c:i:' OPT; do
+                    case $OPT in
+                        c) count=$OPTARG;;
+                        i) sleep=$OPTARG;;
+                    esac
+                done; shift $((OPTIND - 1))
+                case $1 in
+                    [0-9]*) count=$1; shift;;
+                esac
+                while ((count--)); do
+                    eval "$*"
+                    [ "$sleep" ] && (( count > 0 )) && sleep $sleep
+                done
+            ''', 'repeat' ]
+
 Read ["CONFIGURATION FILE"](#configuration-file) section.
 
 ## MACROS
