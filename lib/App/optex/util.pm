@@ -62,7 +62,7 @@ Change working directory to I<directory>.
 
 sub chdir {
     my %arg = @_;
-    my $dir = $arg{PATH} or do {
+    my $dir = ($arg{PATH} || $arg{path}) or do {
 	warn __PACKAGE__."::chdir PATH is required.\n";
 	return;
     };
