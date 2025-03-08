@@ -4,7 +4,7 @@ optex - 汎用コマンドオプションラッパー
 
 # VERSION
 
-Version 1.0101
+Version 1.02
 
 # SYNOPSIS
 
@@ -73,8 +73,7 @@ macOSの`date`コマンドを考えてみましょう。これには`-I[TIMESPEC
 
 **optex**のコマンドエイリアスはシェルのエイリアス機能と変わりませんが、ツールやスクリプトからコマンドとして実行できる点、設定ファイルで一括管理できる点が有効です。
 
-設定ファイルでコマンドエイリアスを設定できます
-(`~/.optex.d/config.toml`) like this:
+コマンドエイリアスは、設定ファイル（`~/.optex.d/config.toml`）にこのように設定できます：
 
     [alias]
         tc = "optex -Mtextconv"
@@ -90,6 +89,25 @@ macOSの`date`コマンドを考えてみましょう。これには`-I[TIMESPEC
     % tc diff A.docx B.docx
 
 エイリアス名はrcファイルとモジュールディレクトリを見つけるために使用されます。上記の例では、`~/.optex.d/tc.rc`と`~/.optex.d/tc/`が参照されます。
+
+設定ファイルにシェルスクリプトを書くことも可能です。次の例は、Cシェルの`repeat`コマンドを実装しています。
+
+    [alias]
+            repeat = [ 'bash', '-c', '''
+                while getopts 'c:i:' OPT; do
+                    case $OPT in
+                        c) count=$OPTARG;;
+                        i) sleep=$OPTARG;;
+                    esac
+                done; shift $((OPTIND - 1))
+                case $1 in
+                    [0-9]*) count=$1; shift;;
+                esac
+                while ((count--)); do
+                    eval "$*"
+                    [ "$sleep" ] && (( count > 0 )) && sleep $sleep
+                done
+            ''', 'repeat' ]
 
 ["CONFIGURATION FILE"](#configuration-file)セクションを読んでください。
 
@@ -377,4 +395,4 @@ Kazumasa Utashiro
 You can redistribute it and/or modify it under the same terms
 as Perl itself.
 
-Copyright ©︎ 2017-2024 Kazumasa Utashiro
+Copyright ©︎ 2017-2025 Kazumasa Utashiro

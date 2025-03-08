@@ -1,71 +1,282 @@
-{
-   "Actually, C<--iso-8601> option can be defined simpler as this:\n" : "实际上，C<--iso-8601> 选项可以定义得更简单：\n",
-   "Alias name is used to find rc file and module directory. In the above example, F<~/.optex.d/tc.rc> and F<~/.optex.d/tc/> will be referred.\n" : "别名用于查找 rc 文件和模块目录。在上例中，将引用 F<~/.optex.d/tc.rc> 和 F<~/.optex.d/tc/>。\n",
-   "And include F<$HOME/.optex.d/bin> in your C<PATH> evnironment.\n" : "并在 C<PATH> 环境中包含 F<$HOME/.optex.d/bin>。\n",
-   "B<optex> I<command> [ B<-M>I<module> ] ...\n" : "B<optex> I<command> [ B<-M>I<module> ] ...\n",
-   "B<optex> I<options> [ -l | -m ] ...\n" : "B<optex> I<options> [ -l | -m ] ...\n",
-   "B<optex> also supports module extension. In the example of C<date>, module file is found at F<~/.optex.d/date/> directory. If default module, F<~/.optex.d/date/default.pm> exists, it is loaded automatically on every execution.\n" : "B<optex> 还支持模块扩展。以 C<date> 为例，模块文件位于 F<~/.optex.d/date/> 目录下。如果存在默认模块 F<~/.optex.d/date/default.pm>，则每次执行时都会自动加载该模块。\n",
-   "B<optex> deals with module option (-M) on target command by default. However, there is a command which also uses same option for own purpose. Option B<--nomodule> disables that behavior. Other option interpretation is still effective, and there is no problem using module option in rc or module files.\n" : "B<optex> 默认处理目标命令的模块选项 (-M)。不过，有一条命令也使用相同的选项。选项 B<--nomodule> 会禁用这种行为。其他选项的解释仍然有效，在 rc 或模块文件中使用模块选项也没有问题。\n",
-   "B<optex> is a general purpose command option handling wrapper utilizing Perl module L<Getopt::EX>. It enables user to define their own option aliases for any commands on the system, and provide module style extensibility.\n" : "B<optex> 是一个利用 Perl 模块 L<Getopt::EX> 的通用命令选项处理包装器。它允许用户为系统中的任何命令定义自己的选项别名，并提供模块风格的可扩展性。\n",
-   "B<optex>'s command alias is no different from the alias function of shell, but it is effective in that it can be executed as a command from a tool or script, and can be managed collectively in a configuration file.\n" : "B<optex> 的命令别名与 shell 的别名功能并无不同，但它的高效之处在于可以作为工具或脚本的命令执行，并可在配置文件中进行统一管理。\n",
-   "Command alias can be invoked either from symbolic link and command argument.\n" : "命令别名可通过符号链接和命令参数调用。\n",
-   "Command aliases can be set in the configuration file\n" : "可以在配置文件中设置命令别名\n",
-   "Common configuration is stored in F<~/.optex.d/default.rc> file, and those rules are applied to all commands executed through B<optex>.\n" : "常用配置保存在 F<~/.optex.d/default.rc> 文件中，这些规则将应用于通过 B<optex> 执行的所有命令。\n",
-   "Common startup file.\n" : "常用启动文件。\n",
-   "Complex string can be composed using macro C<define>. Next example is an awk script to count vowels in the text, to be declared in file F<~/.optex.d/awk.rc>.\n" : "使用宏 C<define> 可以组成复杂的字符串。下一个例子是在文件 F<~/.optex.d/awk.rc> 中声明的计算文本中元音的 awk 脚本。\n",
-   "Configuration file.\n" : "配置文件。\n",
-   "Create symbolic link in F<~/.optex.d/bin> directory.\n" : "在 F<~/.optex.d/bin> 目录中创建符号链接。\n",
-   "Default directory to store symbolic links.\n" : "存储符号链接的默认目录。\n",
-   "Default module for I<command>.\n" : "I<command> 的默认模块。\n",
-   "If a symbolic link C<< date -> optex >> is found in command search path, you can use it just same as standard command, but with unsupported options.\n" : "如果在命令搜索路径中找到符号链接 C<< date -> optex >>，则可以使用与标准命令相同的命令，但使用不支持的选项。\n",
-   "If the configuration file F<~/.optex.d/>I<command>F<.rc> exists, it is evaluated before execution and command arguments are pre-processed using it.\n" : "如果存在配置文件 F<~/.optex.d/>I<command>F<.rc>，则会在执行前对其进行评估，并使用该文件对命令参数进行预处理。\n",
-   "If you want use C<-Mes> module, make a file F<~/.optex.d/es.pm> with following content.\n" : "如果要使用 C<-Mes> 模块，请在 F<~/.optex.d/es.pm> 文件中加入以下内容。\n",
-   "In addition to its own modules, B<optex> can also use C<Getopt::EX> modules. The standard C<Getopt::EX> modules installed are these.\n" : "除自身模块外，B<optex> 还可以使用 C<Getopt::EX> 模块。已安装的标准 C<Getopt::EX> 模块如下。\n",
-   "List rc files in F<~/.optex.d> directory.\n" : "列出 F<~/.optex.d/bin> 目录中的 rc 文件。\n",
-   "List symbolic link files in F<~/.optex.d/bin> directory.\n" : "列出 F<~/.optex.d/bin> 目录中的符号链接文件。\n",
-   "Module C<i18n> is implemented as L<Getopt::EX::i18n> and included in this distribution. So it can be used as above without additional installation.\n" : "模块 C<i18n> 作为 L<Getopt::EX::i18n> 实现，并包含在此发行版中。因此，无需额外安装，即可如上使用。\n",
-   "Module directory for I<command>.\n" : "I<command> 的模块目录。\n",
-   "Module is also used with subroutine call. Suppose F<~/.optex.d/env.pm> module look like:\n" : "模块也用于子程序调用。假设 F<~/.optex.d/env.pm> 模块看起来像这样：\n",
-   "Module to implement command input/output filters. See L<App::optex::util::filter> for detail.\n" : "实现命令输入/输出过滤器的模块。详见 L<App::optex::util::filter>。\n",
-   "Module to manipulate command argument. See L<App::optex::util::argv> for detail.\n" : "操作命令参数的模块。详见 L<App::optex::util::argv>。\n",
-   "Option B<--man> or B<-h> will print document if available. Option B<-l> will print module path. Option B<-m> will show the module itself. When used after other modules, print information about the last declared module. Next command show the document about B<second> module.\n" : "选项 B<--man> 或 B<-h> 将打印文件（如果有）。选项 B<-l> 将打印模块路径。选项 B<-m> 将显示模块本身。在其他模块之后使用时，将打印最后声明模块的信息。下一条命令将显示 B<second> 模块的文档。\n",
-   "Option aliases can be also declared in the module, at the end of file, following special literal C<__DATA__>. Using this, you can prepare multiple set of options for different purposes. Think about generic B<i18n> module:\n" : "选项别名也可以在模块中声明，位于文件末尾，紧跟特殊字面 C<__DATA__>。利用这一点，你可以为不同目的准备多组选项。想想通用的 B<i18n> 模块：\n",
-   "Other modules are loaded using C<-M> option. Unlike other options, C<-M> have to be placed at the beginning of argument list. Module files in F<~/.optex.d/date/> directory are used only for C<date> command. If the module is placed on F<~/.optex.d/> directory, it can be used from all commands.\n" : "其他模块使用 C<-M> 选项加载。与其他选项不同，C<-M> 必须放在参数列表的开头。F<~/.optex.d/date/> 目录中的模块文件只用于 C<date> 命令。如果模块放在 F<~/.optex.d/> 目录下，则所有命令都可以使用它。\n",
-   "Override default configuration file F<OPTEX_ROOT/config.toml>.\n" : "覆盖默认配置文件 F<OPTEX_ROOT/config.toml>。\n",
-   "Override default root directory F<~/.optex.d>.\n" : "覆盖默认根目录 F<~/.optex.d>。\n",
-   "Override default symbolic link directory F<OPTEX_ROOT/bin>.\n" : "覆盖默认的符号链接目录 F<OPTEX_ROOT/bin>。\n",
-   "Personal root directory.\n" : "个人根目录。\n",
-   "Print available option list. Option name is printed with substitution form, or help message if defined. Use B<-x> option to omit help message.\n" : "打印可用选项列表。选项名称与替换形式一起打印，如果已定义，则打印帮助信息。使用 B<-x> 选项可省略帮助信息。\n",
-   "Print debug messages.\n" : "打印调试信息。\n",
-   "Read L<CONFIGURATION FILE> section.\n" : "请阅读 L<CONFIGURATION FILE> 部分。\n",
-   "Remove symbolic link in F<~/.optex.d/bin> directory.\n" : "删除 F<~/.optex.d/bin> 目录中的符号链接。\n",
-   "Set command aliases. Example:\n" : "设置命令别名。例如\n",
-   "Set commands for which B<optex> does not interpret module option B<-M>. If the target command is found in this list, it is executed as if option B<--no-module> is given to B<optex>.\n" : "设置 B<optex> 不解释模块选项 B<-M> 的命令。如果在此列表中找到目标命令，就会像给 B<optex> 提供选项 B<--no-module> 一样执行该命令。\n",
-   "Set module paths separated by colon (C<:>). These are inserted before standard path.\n" : "设置以冒号 (C<:>) 分隔的模块路径。这些路径将插入标准路径之前。\n",
-   "Standard modules are installed at C<App::optex>, and they can be addressed with and without C<App::optex> prefix.\n" : "标准模块安装在 C<App::optex>，可以使用或不使用 C<App::optex>前缀。\n",
-   "Startup file for I<command>.\n" : "I<command> 的启动文件。\n",
-   "Stop option manipulation. Use full pathname otherwise.\n" : "停止选项操作。否则使用完整路径名。\n",
-   "System module directory.\n" : "系统模块目录。\n",
-   "Target command is given as an argument:\n" : "目标命令作为参数给出：\n",
-   "The C<textconv> module can be used to convert files given as arguments to plain text. Defined in this way, Word files can be compared as follows.\n" : "C<textconv> 模块可用于将作为参数给定的文件转换为纯文本。以这种方式定义的 Word 文件可按如下方式进行比较。\n",
-   "Then it can be used in more generic fashion. In the next example, first format is easy to read, but second one is more easy to type because it does not have special characters to be escaped.\n" : "那么它可以以更通用的方式使用。在下例中，第一种格式易于阅读，但第二种格式更易于键入，因为它没有需要转义的特殊字符。\n",
-   "Then next command will work as expected.\n" : "然后，下一条命令就会按预期运行。\n",
-   "Then you can use them without module option. In this case, option C<--ru> is replaced by C<-Mi18n --ru> automatically.\n" : "然后就可以在没有模块选项的情况下使用它们了。在这种情况下，选项 C<--ru> 会被 C<-Mi18n --ru> 自动替换。\n",
-   "These options are not effective when B<optex> was executed from symbolic link.\n" : "从符号链接执行 B<optex> 时，这些选项无效。\n",
-   "Think of macOS's C<date> command, which does not have C<-I[TIMESPEC]> option. Using B<optex>, these can be implemented by preparing following setting in F<~/.optex.d/date.rc> file.\n" : "想想 macOS 的 C<date> 命令，它没有 C<-I[TIMESPEC]> 选项。使用 B<optex>，可以通过在 F<~/.optex.d/date.rc> 文件中进行以下设置来实现这些功能。\n",
-   "This can be used like this:\n" : "可以这样使用\n",
-   "This can be used like:\n" : "使用方法如下：\n",
-   "This is a normal Perl module, so package declaration and the final true value is necessary. Between them, you can put any kind of Perl code. For example, next program set environment variable C<LANG> to C<C> before executing C<date> command.\n" : "这是一个普通的 Perl 模块，因此包声明和最终 true 值是必要的。在它们之间，可以放入任何类型的 Perl 代码。例如，下一个程序在执行 C<date> 命令前将环境变量 C<LANG> 设为 C<C>。\n",
-   "This is not necessary, but it seems a good idea to make special directory to contain symbolic links for B<optex>, placing it in your command search path. Then you can easily add/remove it from the path, or create/remove symbolic links.\n" : "这并非必要，但将 B<optex> 设置为包含符号链接的特殊目录，并将其置于命令搜索路径中似乎是个好主意。这样你就可以很容易地从路径中添加/删除它，或创建/删除符号链接。\n",
-   "This works fine almost always, but fails with sole C<--iso-8601> option preceding other option like this:\n" : "几乎每次都能正常工作，但如果只有 C<--iso-8601> 选项在其他选项之前，则会出现类似故障：\n",
-   "Usually B<optex> exits with status of executed command. This option override it and force to exit with specified status code.\n" : "通常 B<optex> 会以已执行命令的状态退出。该选项会覆盖它，强制以指定的状态代码退出。\n",
-   "When setting complex option, C<expand> directive is useful. C<expand> works almost same as C<option>, but effective only within the file scope, and not available for command line option.\n" : "在设置复杂选项时，C<expand> 指令非常有用。C<expand> 的作用与 C<option> 几乎相同，但只在文件范围内有效，不适用于命令行选项。\n",
-   "When starting up, B<optex> reads configuration file F<~/.optex.d/config.toml> which is supposed to be written in TOML format.\n" : "启动时，B<optex> 会读取配置文件 F<~/.optex.d/config.toml>，该文件应为 TOML 格式。\n",
-   "When the specified module was not found in library path, B<optex> ignores the option and stops argument processing immediately. Ignored options are passed through to the target command.\n" : "如果在库路径中找不到指定的模块，B<optex> 将忽略该选项并立即停止参数处理。忽略的选项将传递给目标命令。\n",
-   "You can declare autoload module in your F<~/.optex.d/optex.rc> like:\n" : "可以在 F<~/.optex.d/optex.rc> 中声明自动加载模块：\n",
-   "You can display a Greek calendar by doing the following:\n" : "您可以通过以下操作显示希腊日历：\n",
-   "You can make symbolic link from C<tc> to C<optex> like this:\n" : "可以像这样从 C<tc> 建立符号链接到 C<optex>：\n",
-   "optex - General purpose command option wrapper\n" : "optex - 通用命令选项包装器\n",
-   "or I<command> -> B<optex> symlink, or\n" : "或 I<command> -> B<optex> 符号链接，或\n",
-   "or as a symbolic linked file to B<optex>:\n" : "或 B<optex> 的符号链接文件：\n"
-}
+[
+   [
+      "optex - General purpose command option wrapper\n",
+      "optex - 通用命令选项包装器\n"
+   ],
+   [
+      "B<optex> I<command> [ B<-M>I<module> ] ...\n",
+      "B<optex> I<command> [ B<-M>I<module> ] ...\n"
+   ],
+   [
+      "or I<command> -> B<optex> symlink, or\n",
+      "或 I<command> -> B<optex> 符号链接，或\n"
+   ],
+   [
+      "B<optex> I<options> [ -l | -m ] ...\n",
+      "B<optex> I<options> [ -l | -m ] ...\n"
+   ],
+   [
+      "B<optex> is a general purpose command option handling wrapper utilizing Perl module L<Getopt::EX>. It enables user to define their own option aliases for any commands on the system, and provide module style extensibility.\n",
+      "B<optex> 是一个利用 Perl 模块 L<Getopt::EX> 的通用命令选项处理包装器。它允许用户为系统中的任何命令定义自己的选项别名，并提供模块风格的可扩展性。\n"
+   ],
+   [
+      "Target command is given as an argument:\n",
+      "目标命令作为参数给出：\n"
+   ],
+   [
+      "or as a symbolic linked file to B<optex>:\n",
+      "或 B<optex> 的符号链接文件：\n"
+   ],
+   [
+      "If the configuration file F<~/.optex.d/>I<command>F<.rc> exists, it is evaluated before execution and command arguments are pre-processed using it.\n",
+      "如果存在配置文件 F<~/.optex.d/>I<command>F<.rc>，则会在执行前对其进行评估，并使用该文件对命令参数进行预处理。\n"
+   ],
+   [
+      "Think of macOS's C<date> command, which does not have C<-I[TIMESPEC]> option. Using B<optex>, these can be implemented by preparing following setting in F<~/.optex.d/date.rc> file.\n",
+      "想想 macOS 的 C<date> 命令，它没有 C<-I[TIMESPEC]> 选项。使用 B<optex>，可以通过在 F<~/.optex.d/date.rc> 文件中进行以下设置来实现这些功能。\n"
+   ],
+   [
+      "Then next command will work as expected.\n",
+      "然后，下一条命令就会按预期运行。\n"
+   ],
+   [
+      "If a symbolic link C<< date -> optex >> is found in command search path, you can use it just same as standard command, but with unsupported options.\n",
+      "如果在命令搜索路径中找到符号链接 C<< date -> optex >>，则可以使用与标准命令相同的命令，但使用不支持的选项。\n"
+   ],
+   [
+      "Common configuration is stored in F<~/.optex.d/default.rc> file, and those rules are applied to all commands executed through B<optex>.\n",
+      "常用配置保存在 F<~/.optex.d/default.rc> 文件中，这些规则将应用于通过 B<optex> 执行的所有命令。\n"
+   ],
+   [
+      "Actually, C<--iso-8601> option can be defined simpler as this:\n",
+      "实际上，C<--iso-8601> 选项可以定义得更简单：\n"
+   ],
+   [
+      "This works fine almost always, but fails with sole C<--iso-8601> option preceding other option like this:\n",
+      "几乎每次都能正常工作，但如果只有 C<--iso-8601> 选项在其他选项之前，则会出现类似故障：\n"
+   ],
+   [
+      "B<optex>'s command alias is no different from the alias function of shell, but it is effective in that it can be executed as a command from a tool or script, and can be managed collectively in a configuration file.\n",
+      "B<optex> 的命令别名与 shell 的别名功能并无不同，但它的高效之处在于可以作为工具或脚本的命令执行，并可在配置文件中进行统一管理。\n"
+   ],
+   [
+      "Command aliases can be set in the configuration file (F<~/.optex.d/config.toml>) like this:\n",
+      "命令别名可以像这样在配置文件（F<~/.optex.d/config.toml>）中设置：\n"
+   ],
+   [
+      "You can make symbolic link from C<tc> to C<optex> like this:\n",
+      "可以像这样从 C<tc> 建立符号链接到 C<optex>：\n"
+   ],
+   [
+      "And include F<$HOME/.optex.d/bin> in your C<PATH> evnironment.\n",
+      "并在 C<PATH> 环境中包含 F<$HOME/.optex.d/bin>。\n"
+   ],
+   [
+      "The C<textconv> module can be used to convert files given as arguments to plain text. Defined in this way, Word files can be compared as follows.\n",
+      "C<textconv> 模块可用于将作为参数给定的文件转换为纯文本。以这种方式定义的 Word 文件可按如下方式进行比较。\n"
+   ],
+   [
+      "Alias name is used to find rc file and module directory. In the above example, F<~/.optex.d/tc.rc> and F<~/.optex.d/tc/> will be referred.\n",
+      "别名用于查找 rc 文件和模块目录。在上例中，将引用 F<~/.optex.d/tc.rc> 和 F<~/.optex.d/tc/>。\n"
+   ],
+   [
+      "It is also possible to write shell scripts in the config file. The following example implements the C-shell C<repeat> command.\n",
+      "也可以在配置文件中编写 shell 脚本。下面的示例实现了 C-shell C<repeat> 命令。\n"
+   ],
+   [
+      "Read L<CONFIGURATION FILE> section.\n",
+      "请阅读 L<CONFIGURATION FILE> 部分。\n"
+   ],
+   [
+      "Complex string can be composed using macro C<define>. Next example is an awk script to count vowels in the text, to be declared in file F<~/.optex.d/awk.rc>.\n",
+      "使用宏 C<define> 可以组成复杂的字符串。下一个例子是在文件 F<~/.optex.d/awk.rc> 中声明的计算文本中元音的 awk 脚本。\n"
+   ],
+   [
+      "This can be used like this:\n",
+      "可以这样使用\n"
+   ],
+   [
+      "When setting complex option, C<expand> directive is useful. C<expand> works almost same as C<option>, but effective only within the file scope, and not available for command line option.\n",
+      "在设置复杂选项时，C<expand> 指令非常有用。C<expand> 的作用与 C<option> 几乎相同，但只在文件范围内有效，不适用于命令行选项。\n"
+   ],
+   [
+      "B<optex> also supports module extension. In the example of C<date>, module file is found at F<~/.optex.d/date/> directory. If default module, F<~/.optex.d/date/default.pm> exists, it is loaded automatically on every execution.\n",
+      "B<optex> 还支持模块扩展。以 C<date> 为例，模块文件位于 F<~/.optex.d/date/> 目录下。如果存在默认模块 F<~/.optex.d/date/default.pm>，则每次执行时都会自动加载该模块。\n"
+   ],
+   [
+      "This is a normal Perl module, so package declaration and the final true value is necessary. Between them, you can put any kind of Perl code. For example, next program set environment variable C<LANG> to C<C> before executing C<date> command.\n",
+      "这是一个普通的 Perl 模块，因此包声明和最终 true 值是必要的。在它们之间，可以放入任何类型的 Perl 代码。例如，下一个程序在执行 C<date> 命令前将环境变量 C<LANG> 设为 C<C>。\n"
+   ],
+   [
+      "Other modules are loaded using C<-M> option. Unlike other options, C<-M> have to be placed at the beginning of argument list. Module files in F<~/.optex.d/date/> directory are used only for C<date> command. If the module is placed on F<~/.optex.d/> directory, it can be used from all commands.\n",
+      "其他模块使用 C<-M> 选项加载。与其他选项不同，C<-M> 必须放在参数列表的开头。F<~/.optex.d/date/> 目录中的模块文件只用于 C<date> 命令。如果模块放在 F<~/.optex.d/> 目录下，则所有命令都可以使用它。\n"
+   ],
+   [
+      "If you want use C<-Mes> module, make a file F<~/.optex.d/es.pm> with following content.\n",
+      "如果要使用 C<-Mes> 模块，请在 F<~/.optex.d/es.pm> 文件中加入以下内容。\n"
+   ],
+   [
+      "When the specified module was not found in library path, B<optex> ignores the option and stops argument processing immediately. Ignored options are passed through to the target command.\n",
+      "如果在库路径中找不到指定的模块，B<optex> 将忽略该选项并立即停止参数处理。忽略的选项将传递给目标命令。\n"
+   ],
+   [
+      "Module is also used with subroutine call. Suppose F<~/.optex.d/env.pm> module look like:\n",
+      "模块也用于子程序调用。假设 F<~/.optex.d/env.pm> 模块看起来像这样：\n"
+   ],
+   [
+      "Then it can be used in more generic fashion. In the next example, first format is easy to read, but second one is more easy to type because it does not have special characters to be escaped.\n",
+      "那么它可以以更通用的方式使用。在下例中，第一种格式易于阅读，但第二种格式更易于键入，因为它没有需要转义的特殊字符。\n"
+   ],
+   [
+      "Option aliases can be also declared in the module, at the end of file, following special literal C<__DATA__>. Using this, you can prepare multiple set of options for different purposes. Think about generic B<i18n> module:\n",
+      "选项别名也可以在模块中声明，位于文件末尾，紧跟特殊字面 C<__DATA__>。利用这一点，你可以为不同目的准备多组选项。想想通用的 B<i18n> 模块：\n"
+   ],
+   [
+      "This can be used like:\n",
+      "使用方法如下：\n"
+   ],
+   [
+      "You can declare autoload module in your F<~/.optex.d/optex.rc> like:\n",
+      "可以在 F<~/.optex.d/optex.rc> 中声明自动加载模块：\n"
+   ],
+   [
+      "Then you can use them without module option. In this case, option C<--ru> is replaced by C<-Mi18n --ru> automatically.\n",
+      "然后就可以在没有模块选项的情况下使用它们了。在这种情况下，选项 C<--ru> 会被 C<-Mi18n --ru> 自动替换。\n"
+   ],
+   [
+      "Module C<i18n> is implemented as L<Getopt::EX::i18n> and included in this distribution. So it can be used as above without additional installation.\n",
+      "模块 C<i18n> 作为 L<Getopt::EX::i18n> 实现，并包含在此发行版中。因此，无需额外安装，即可如上使用。\n"
+   ],
+   [
+      "Standard modules are installed at C<App::optex>, and they can be addressed with and without C<App::optex> prefix.\n",
+      "标准模块安装在 C<App::optex>，可以使用或不使用 C<App::optex>前缀。\n"
+   ],
+   [
+      "Print available option list. Option name is printed with substitution form, or help message if defined. Use B<-x> option to omit help message.\n",
+      "打印可用选项列表。选项名称与替换形式一起打印，如果已定义，则打印帮助信息。使用 B<-x> 选项可省略帮助信息。\n"
+   ],
+   [
+      "Option B<--man> or B<-h> will print document if available. Option B<-l> will print module path. Option B<-m> will show the module itself. When used after other modules, print information about the last declared module. Next command show the document about B<second> module.\n",
+      "选项 B<--man> 或 B<-h> 将打印文件（如果有）。选项 B<-l> 将打印模块路径。选项 B<-m> 将显示模块本身。在其他模块之后使用时，将打印最后声明模块的信息。下一条命令将显示 B<second> 模块的文档。\n"
+   ],
+   [
+      "Print debug messages.\n",
+      "打印调试信息。\n"
+   ],
+   [
+      "Module to manipulate command argument. See L<App::optex::util::argv> for detail.\n",
+      "操作命令参数的模块。详见 L<App::optex::util::argv>。\n"
+   ],
+   [
+      "Module to implement command input/output filters. See L<App::optex::util::filter> for detail.\n",
+      "实现命令输入/输出过滤器的模块。详见 L<App::optex::util::filter>。\n"
+   ],
+   [
+      "In addition to its own modules, B<optex> can also use C<Getopt::EX> modules. The standard C<Getopt::EX> modules installed are these.\n",
+      "除自身模块外，B<optex> 还可以使用 C<Getopt::EX> 模块。已安装的标准 C<Getopt::EX> 模块如下。\n"
+   ],
+   [
+      "You can display a Greek calendar by doing the following:\n",
+      "您可以通过以下操作显示希腊日历：\n"
+   ],
+   [
+      "These options are not effective when B<optex> was executed from symbolic link.\n",
+      "从符号链接执行 B<optex> 时，这些选项无效。\n"
+   ],
+   [
+      "Create symbolic link in F<~/.optex.d/bin> directory.\n",
+      "在 F<~/.optex.d/bin> 目录中创建符号链接。\n"
+   ],
+   [
+      "Remove symbolic link in F<~/.optex.d/bin> directory.\n",
+      "删除 F<~/.optex.d/bin> 目录中的符号链接。\n"
+   ],
+   [
+      "List symbolic link files in F<~/.optex.d/bin> directory.\n",
+      "列出 F<~/.optex.d/bin> 目录中的符号链接文件。\n"
+   ],
+   [
+      "List rc files in F<~/.optex.d> directory.\n",
+      "列出 F<~/.optex.d/bin> 目录中的 rc 文件。\n"
+   ],
+   [
+      "Stop option manipulation. Use full pathname otherwise.\n",
+      "停止选项操作。否则使用完整路径名。\n"
+   ],
+   [
+      "B<optex> deals with module option (-M) on target command by default. However, there is a command which also uses same option for own purpose. Option B<--nomodule> disables that behavior. Other option interpretation is still effective, and there is no problem using module option in rc or module files.\n",
+      "B<optex> 默认处理目标命令的模块选项 (-M)。不过，有一条命令也使用相同的选项。选项 B<--nomodule> 会禁用这种行为。其他选项的解释仍然有效，在 rc 或模块文件中使用模块选项也没有问题。\n"
+   ],
+   [
+      "Usually B<optex> exits with status of executed command. This option override it and force to exit with specified status code.\n",
+      "通常 B<optex> 会以已执行命令的状态退出。该选项会覆盖它，强制以指定的状态代码退出。\n"
+   ],
+   [
+      "When starting up, B<optex> reads configuration file F<~/.optex.d/config.toml> which is supposed to be written in TOML format.\n",
+      "启动时，B<optex> 会读取配置文件 F<~/.optex.d/config.toml>，该文件应为 TOML 格式。\n"
+   ],
+   [
+      "Set commands for which B<optex> does not interpret module option B<-M>. If the target command is found in this list, it is executed as if option B<--no-module> is given to B<optex>.\n",
+      "设置 B<optex> 不解释模块选项 B<-M> 的命令。如果在此列表中找到目标命令，就会像给 B<optex> 提供选项 B<--no-module> 一样执行该命令。\n"
+   ],
+   [
+      "Set command aliases. Example:\n",
+      "设置命令别名。例如\n"
+   ],
+   [
+      "Command alias can be invoked either from symbolic link and command argument.\n",
+      "命令别名可通过符号链接和命令参数调用。\n"
+   ],
+   [
+      "System module directory.\n",
+      "系统模块目录。\n"
+   ],
+   [
+      "Personal root directory.\n",
+      "个人根目录。\n"
+   ],
+   [
+      "Configuration file.\n",
+      "配置文件。\n"
+   ],
+   [
+      "Common startup file.\n",
+      "常用启动文件。\n"
+   ],
+   [
+      "Startup file for I<command>.\n",
+      "I<command> 的启动文件。\n"
+   ],
+   [
+      "Module directory for I<command>.\n",
+      "I<command> 的模块目录。\n"
+   ],
+   [
+      "Default module for I<command>.\n",
+      "I<command> 的默认模块。\n"
+   ],
+   [
+      "Default directory to store symbolic links.\n",
+      "存储符号链接的默认目录。\n"
+   ],
+   [
+      "This is not necessary, but it seems a good idea to make special directory to contain symbolic links for B<optex>, placing it in your command search path. Then you can easily add/remove it from the path, or create/remove symbolic links.\n",
+      "这并非必要，但将 B<optex> 设置为包含符号链接的特殊目录，并将其置于命令搜索路径中似乎是个好主意。这样你就可以很容易地从路径中添加/删除它，或创建/删除符号链接。\n"
+   ],
+   [
+      "Override default root directory F<~/.optex.d>.\n",
+      "覆盖默认根目录 F<~/.optex.d>。\n"
+   ],
+   [
+      "Override default configuration file F<OPTEX_ROOT/config.toml>.\n",
+      "覆盖默认配置文件 F<OPTEX_ROOT/config.toml>。\n"
+   ],
+   [
+      "Set module paths separated by colon (C<:>). These are inserted before standard path.\n",
+      "设置以冒号 (C<:>) 分隔的模块路径。这些路径将插入标准路径之前。\n"
+   ],
+   [
+      "Override default symbolic link directory F<OPTEX_ROOT/bin>.\n",
+      "覆盖默认的符号链接目录 F<OPTEX_ROOT/bin>。\n"
+   ]
+]

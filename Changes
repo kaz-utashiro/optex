@@ -2,6 +2,13 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+1.02 2025-03-08T08:42:33Z
+
+    - udpate -Mutil::argv module
+      * do not care if the file exists or not
+      * change include/exclude -> match/unmatch
+      * add `omit' parameter as an opposite for `glob'
+
 1.0101 2024-09-22T10:24:00Z
 
     - fix dependency

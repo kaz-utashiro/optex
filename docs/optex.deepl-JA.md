@@ -4,7 +4,7 @@ optex - 汎用コマンド・オプション・ラッパー
 
 # VERSION
 
-Version 1.0101
+Version 1.02
 
 # SYNOPSIS
 
@@ -73,8 +73,7 @@ Version 1.0101
 
 **optex**のコマンドエイリアスは、シェルのエイリアス機能と変わりませんが、ツールやスクリプトからコマンドとして実行でき、設定ファイルで一括管理できる点が効果的です。
 
-コマンドエイリアスは設定ファイルで設定できる
-(`~/.optex.d/config.toml`) like this:
+コマンドエイリアスは、このように設定ファイル（`~/.optex.d/config.toml`）で設定することができる：
 
     [alias]
         tc = "optex -Mtextconv"
@@ -90,6 +89,25 @@ Version 1.0101
     % tc diff A.docx B.docx
 
 エイリアス名はrcファイルとモジュール・ディレクトリを見つけるために使われます。上の例では、`~/.optex.d/tc.rc`と`~/.optex.d/tc/`が参照されます。
+
+設定ファイルにシェルスクリプトを記述することも可能です。次の例は、Cシェル`repeat`コマンドを実装したものです。
+
+    [alias]
+            repeat = [ 'bash', '-c', '''
+                while getopts 'c:i:' OPT; do
+                    case $OPT in
+                        c) count=$OPTARG;;
+                        i) sleep=$OPTARG;;
+                    esac
+                done; shift $((OPTIND - 1))
+                case $1 in
+                    [0-9]*) count=$1; shift;;
+                esac
+                while ((count--)); do
+                    eval "$*"
+                    [ "$sleep" ] && (( count > 0 )) && sleep $sleep
+                done
+            ''', 'repeat' ]
 
 ["CONFIGURATION FILE"](#configuration-file)セクションを読んでください。
 
@@ -377,4 +395,4 @@ Kazumasa Utashiro
 You can redistribute it and/or modify it under the same terms
 as Perl itself.
 
-Copyright ©︎ 2017-2024 Kazumasa Utashiro
+Copyright ©︎ 2017-2025 Kazumasa Utashiro

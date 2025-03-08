@@ -4,7 +4,7 @@ optex - 通用命令选项包装器
 
 # VERSION
 
-Version 1.0101
+Version 1.02
 
 # SYNOPSIS
 
@@ -73,8 +73,7 @@ Version 1.0101
 
 **optex** 的命令别名与 shell 的别名功能并无不同，但它的高效之处在于可以作为工具或脚本的命令执行，并可在配置文件中进行统一管理。
 
-可以在配置文件中设置命令别名
-(`~/.optex.d/config.toml`) like this:
+命令别名可以像这样在配置文件（`~/.optex.d/config.toml`）中设置：
 
     [alias]
         tc = "optex -Mtextconv"
@@ -90,6 +89,25 @@ Version 1.0101
     % tc diff A.docx B.docx
 
 别名用于查找 rc 文件和模块目录。在上例中，将引用 `~/.optex.d/tc.rc` 和 `~/.optex.d/tc/`。
+
+也可以在配置文件中编写 shell 脚本。下面的示例实现了 C-shell `repeat` 命令。
+
+    [alias]
+            repeat = [ 'bash', '-c', '''
+                while getopts 'c:i:' OPT; do
+                    case $OPT in
+                        c) count=$OPTARG;;
+                        i) sleep=$OPTARG;;
+                    esac
+                done; shift $((OPTIND - 1))
+                case $1 in
+                    [0-9]*) count=$1; shift;;
+                esac
+                while ((count--)); do
+                    eval "$*"
+                    [ "$sleep" ] && (( count > 0 )) && sleep $sleep
+                done
+            ''', 'repeat' ]
 
 请阅读 ["CONFIGURATION FILE"](#configuration-file) 部分。
 
@@ -377,4 +395,4 @@ Kazumasa Utashiro
 You can redistribute it and/or modify it under the same terms
 as Perl itself.
 
-Copyright ©︎ 2017-2024 Kazumasa Utashiro
+Copyright ©︎ 2017-2025 Kazumasa Utashiro
