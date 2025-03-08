@@ -25,10 +25,14 @@ my %options = (
     "exch"   => "\$<move(1,1)>",
     "times"     => "-M__PACKAGE__::times(count=\$<shift>) \$<move>",
     "reverse"   => "-M__PACKAGE__::reverse() \$<move>",
+    "collect"   => "-M__PACKAGE__::collect(\$<shift>) \$<move>",
     "index"     => "-M__PACKAGE__::collect(index=\$<shift>) \$<move>",
     "glob"      => "-M__PACKAGE__::collect(glob=\$<shift>) \$<move>",
-    "include"   => "-M__PACKAGE__::collect(include=\$<shift>) \$<move>",
-    "exclude"   => "-M__PACKAGE__::collect(exclude=\$<shift>) \$<move>",
+    "omit"      => "-M__PACKAGE__::collect(omit=\$<shift>) \$<move>",
+    "match"     => "-M__PACKAGE__::collect(match=\$<shift>) \$<move>",
+    "unmatch"   => "-M__PACKAGE__::collect(unmatch=\$<shift>) \$<move>",
+    "include"   => "-M__PACKAGE__::collect(match=\$<shift>) \$<move>",
+    "exclude"   => "-M__PACKAGE__::collect(unmatch=\$<shift>) \$<move>",
     "filter"    => "-M__PACKAGE__::filter(command=\$<shift>) \$<move>",
     );
 
@@ -69,6 +73,13 @@ In this example,
 
 option B<debug> has value 1, B<message> has string "hello", and
 B<count> also has string "3".
+
+The above command can also be written as follows.
+
+    optex -Mutil::argv::function=debug,message=hello,count=3
+
+The upper format is easier to read visually, but the lower format is
+easier to type from the keyboard.
 
 =head1 FUNCTION
 
@@ -124,27 +135,35 @@ use File::Basename qw(basename);
 
 sub collect {
     my %opt = @_;
+    $opt{match}   //= $opt{include};
+    $opt{unmatch} //= $opt{exclude};
     if ($opt{index}) {
 	my @index = $opt{index} =~ /\d+/g;
 	argv {
 	    @_[ grep { $_ <= $#_ } map { $_ - 1 } @index ];
-	};
+	}
     }
-    elsif (my $glob = $opt{glob}) {
+    elsif (my $glob = $opt{glob} || $opt{omit}) {
 	my $re = glob_to_regex($glob);
 	argv {
-	    grep { !-e or basename($_) =~ /$re/ } @_;
-	};
+	    if ($opt{glob}) {
+		grep { basename($_) =~ /$re/ } @_;
+	    } else {
+		grep { basename($_) !~ /$re/ } @_;
+	    }
+	}
     }
-    elsif (my $pattern = $opt{include}) {
+    elsif (my $re = $opt{match} || $opt{unmatch}) {
 	argv {
-	    grep { !-e or /$pattern/ } @_;
-	};
+	    if ($opt{match}) {
+		grep {  /$re/ } @_;
+	    } else {
+		grep { !/$re/ } @_;
+	    }
+	}
     }
-    elsif (my $exclude = $opt{exclude}) {
-	argv {
-	    grep { !-e or !/$exclude/ } @_;
-	};
+    else {
+	die "collect: no valid parameter.\n";
     }
 }
 
@@ -152,41 +171,47 @@ sub collect {
 
 =item B<collect>(glob=*.c)
 
-=item B<collect>(include=.c$)
+=item B<collect>(omit=*.c)
 
-=item B<collect>(exclude=.c$)
+=item B<collect>(match=.c$)
+
+=item B<collect>(unmatch=.c$)
 
 Collect arguments based on the given parameter.
 
 =over 4
 
-=item B<index>
+=item B<index>=I<index>
 
-    % optex echo -Mutil::argv::collect(index=2:4:6) ichi ni san shi go roku
-
-will print:
-
-    ni shi roku
-
-=item B<glob>
-
-    % optex ls -Mutil::argv::collect(glob=*.c) foo.h foo.c foo.1
+    % optex echo -Mutil::argv::collect=index=2:4:6 one two three four five six
 
 will print:
 
-    foo.c
+    two four six
 
-=item B<include>
+=item B<glob>=I<wildcard>
 
-    % optex ls -Mutil::argv::collect(include=.c$) foo.h foo.c foo.1
+=item B<omit>=I<wildcard>
+
+    % optex ls -Mutil::argv::collect=glob=*.c foo.h foo.c foo.1
 
 will print:
 
     foo.c
 
-=item B<exclude>
+B<omit> is reverse of B<glob>.
 
-    % optex ls -Mutil::argv::collect(exclude=.c$) foo.h foo.c foo.1
+=item B<match>=I<regex>
+
+    % optex ls -Mutil::argv::collect=match=.c$ foo.h foo.c foo.1
+
+will print:
+
+    foo.c
+
+=item B<unmatch>=I<regex>
+
+    % optex ls -Mutil::argv::collect=unmatch=.c$ foo.h foo.c foo.1
 
 will print:
 
@@ -326,7 +351,15 @@ Following options are interface for builtin functions.
 
 =item B<--reverse>
 
-=item B<--collect> I<index>
+=item B<--index> I<index>
+
+=item B<--glob> I<wildcard>
+
+=item B<--omit> I<wildcard>
+
+=item B<--match> I<regex>
+
+=item B<--unmatch> I<regex>
 
 =back
 

@@ -465,4 +465,4 @@ Kazumasa Utashiro
 You can redistribute it and/or modify it under the same terms
 as Perl itself.
 
-Copyright ©︎ 2017-2024 Kazumasa Utashiro
+Copyright ©︎ 2017-2025 Kazumasa Utashiro
