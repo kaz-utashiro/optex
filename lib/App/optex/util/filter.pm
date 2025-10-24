@@ -362,13 +362,11 @@ use Time::HiRes qw(usleep);
 sub interval {
     my %opt = @_;
     $opt{time} //= 1;
-    my $sleep = $opt{time} > 0 ? $opt{time} * 1000000 : 0;
-    io_filter {
-	while (<>) {
-	    print;
-	    usleep $sleep;
-	}
-    } STDOUT => 1 if $sleep > 0;
+    my $sleep = $opt{time} * 1000000;
+    while (<>) {
+	print;
+	usleep $sleep if $sleep > 0;
+    }
 }
 
 push @EXPORT_OK, 'interval';
