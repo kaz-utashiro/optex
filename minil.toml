@@ -11,6 +11,12 @@ os = [
     "MSWin32",
 ]
 
+[FileGatherer]
+exclude_match = [
+    '^CLAUDE\.md$',
+    '^\.claude/',
+]
+
 [release]
 branch = 'master'
 hooks = [
