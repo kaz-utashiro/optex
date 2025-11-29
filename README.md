@@ -278,6 +278,16 @@ Module `i18n` is implemented as [Getopt::EX::i18n](https://metacpan.org/pod/Geto
 this distribution.  So it can be used as above without additional
 installation.
 
+Modules can also define built-in options using `builtin` directive in
+the `__DATA__` section.  Built-in options are processed by
+[Getopt::Long](https://metacpan.org/pod/Getopt%3A%3ALong) and must be specified before the target command name.
+For example:
+
+    optex -Mxform --xform-visible=2 cat file
+
+Here `--xform-visible` is a built-in option defined in the `xform`
+module.
+
 # STANDARD MODULES
 
 Standard modules are installed at `App::optex`, and they can be
