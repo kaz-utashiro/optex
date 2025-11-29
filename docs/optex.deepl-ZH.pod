@@ -6,7 +6,7 @@ optex - 通用命令选项包装器
 
 =head1 VERSION
 
-Version 1.02
+Version 1.03
 
 =head1 SYNOPSIS
 
@@ -237,6 +237,12 @@ B<optex> 还支持模块扩展。以 C<date> 为例，模块文件位于 F<~/.op
     воскресенье, 22 октября 2017 г. 18:00:00 (JST)
 
 模块 C<i18n> 作为 L<Getopt::EX::i18n> 实现，并包含在此发行版中。因此，无需额外安装，即可如上使用。
+
+模块还可以使用 C<__DATA__> 部分的 C<builtin> 指令定义内置选项。内置选项由 L<Getopt::Long> 处理，必须在目标命令名之前指定。例如
+
+    optex -Mxform --xform-visible=2 cat file
+
+这里的 C<--xform-visible> 是 C<xform> 模块中定义的内置选项。
 
 =head1 STANDARD MODULES
 

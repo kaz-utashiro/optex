@@ -4,7 +4,7 @@ LANGS    := JA KO ZH
 RM_LANGS ?= $(LANGS)
 ENGINES  := deepl
 XLANGS   := JA
-XENGINES := gpt4
+XENGINES := gpt5
 
 GET_README  := perl -MTOML -0777E 'say from_toml(<>)->{readme_from}'
 README_FROM := $(shell $(GET_README) ../minil.toml)
@@ -31,7 +31,7 @@ PODS     := $(foreach engin,$(ENGINES),$(foreach lang,$(LANGS),$(SRC:.pod=.$(eng
 MDS      := $(foreach engin,$(ENGINES),$(foreach lang,$(LANGS),$(NAMES:.pod=.$(engin)-$(lang).md)))
 READMES  := $(foreach engin,$(ENGINES),$(RM_LANGS:%=../README.$(engin)-%.md))
 ###########
-# Translate only JA by gpt-4
+# Translate only JA by gpt-5
 #----------
 PODS     += $(foreach engin,$(XENGINES),$(foreach lang,$(XLANGS),$(SRC:.pod=.$(engin)-$(lang).pod)))
 MDS      += $(foreach engin,$(XENGINES),$(foreach lang,$(XLANGS),$(NAMES:.pod=.$(engin)-$(lang).md)))

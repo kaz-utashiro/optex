@@ -148,6 +148,14 @@
       "モジュールC<i18n>はL<Getopt::EX::i18n>として実装され、本ディストリビューションに含まれています。そのため、追加インストールすることなく、上記のように使用することができます。\n"
    ],
    [
+      "Modules can also define built-in options using C<builtin> directive in the C<__DATA__> section. Built-in options are processed by L<Getopt::Long> and must be specified before the target command name. For example:\n",
+      "モジュールは、C<__DATA__>セクションのC<builtin>ディレクティブを使って組み込みオプションを定義することもできる。組み込みオプションはL<Getopt::Long>によって処理され、ターゲットコマンド名の前に指定する必要があります。例えば\n"
+   ],
+   [
+      "Here C<--xform-visible> is a built-in option defined in the C<xform> module.\n",
+      "C<--xform-visible>はC<xform>モジュールで定義された組み込みオプションです。\n"
+   ],
+   [
       "Standard modules are installed at C<App::optex>, and they can be addressed with and without C<App::optex> prefix.\n",
       "標準モジュールはC<App::optex>にインストールされ、C<App::optex>接頭辞の有無にかかわらず対応できます。\n"
    ],

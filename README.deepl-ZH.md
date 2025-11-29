@@ -4,7 +4,7 @@ optex - 通用命令选项包装器
 
 # VERSION
 
-Version 1.02
+Version 1.03
 
 # SYNOPSIS
 
@@ -232,6 +232,12 @@ Version 1.02
     воскресенье, 22 октября 2017 г. 18:00:00 (JST)
 
 模块 `i18n` 作为 [Getopt::EX::i18n](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3Ai18n) 实现，并包含在此发行版中。因此，无需额外安装，即可如上使用。
+
+模块还可以使用 `__DATA__` 部分的 `builtin` 指令定义内置选项。内置选项由 [Getopt::Long](https://metacpan.org/pod/Getopt%3A%3ALong) 处理，必须在目标命令名之前指定。例如
+
+    optex -Mxform --xform-visible=2 cat file
+
+这里的 `--xform-visible` 是 `xform` 模块中定义的内置选项。
 
 # STANDARD MODULES
 

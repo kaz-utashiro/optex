@@ -148,6 +148,14 @@
       "模块 C<i18n> 作为 L<Getopt::EX::i18n> 实现，并包含在此发行版中。因此，无需额外安装，即可如上使用。\n"
    ],
    [
+      "Modules can also define built-in options using C<builtin> directive in the C<__DATA__> section. Built-in options are processed by L<Getopt::Long> and must be specified before the target command name. For example:\n",
+      "模块还可以使用 C<__DATA__> 部分的 C<builtin> 指令定义内置选项。内置选项由 L<Getopt::Long> 处理，必须在目标命令名之前指定。例如\n"
+   ],
+   [
+      "Here C<--xform-visible> is a built-in option defined in the C<xform> module.\n",
+      "这里的 C<--xform-visible> 是 C<xform> 模块中定义的内置选项。\n"
+   ],
+   [
       "Standard modules are installed at C<App::optex>, and they can be addressed with and without C<App::optex> prefix.\n",
       "标准模块安装在 C<App::optex>，可以使用或不使用 C<App::optex>前缀。\n"
    ],

@@ -4,7 +4,7 @@ optex - 범용 명령 옵션 래퍼
 
 # VERSION
 
-Version 1.02
+Version 1.03
 
 # SYNOPSIS
 
@@ -232,6 +232,12 @@ Version 1.02
     воскресенье, 22 октября 2017 г. 18:00:00 (JST)
 
 모듈 `i18n`은 [Getopt::EX::i18n](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3Ai18n)으로 구현되어 이 배포에 포함되어 있습니다. 따라서 추가 설치 없이 위와 같이 사용할 수 있습니다.
+
+모듈은 `__DATA__` 섹션에서 `builtin` 지시어를 사용하여 기본 제공 옵션을 정의할 수도 있습니다. 기본 제공 옵션은 [Getopt::Long](https://metacpan.org/pod/Getopt%3A%3ALong)에 의해 처리되며 대상 명령어 이름 앞에 지정해야 합니다. 예를 들어
+
+    optex -Mxform --xform-visible=2 cat file
+
+여기서 `--xform-visible`은 `xform` 모듈에 정의된 기본 제공 옵션입니다.
 
 # STANDARD MODULES
 

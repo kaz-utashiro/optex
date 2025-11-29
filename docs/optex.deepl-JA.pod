@@ -6,7 +6,7 @@ optex - 汎用コマンド・オプション・ラッパー
 
 =head1 VERSION
 
-Version 1.02
+Version 1.03
 
 =head1 SYNOPSIS
 
@@ -237,6 +237,12 @@ F<~/.optex.d/optex.rc>の中でautoloadモジュールを宣言する：
     воскресенье, 22 октября 2017 г. 18:00:00 (JST)
 
 モジュールC<i18n>はL<Getopt::EX::i18n>として実装され、本ディストリビューションに含まれています。そのため、追加インストールすることなく、上記のように使用することができます。
+
+モジュールは、C<__DATA__>セクションのC<builtin>ディレクティブを使って組み込みオプションを定義することもできます。組み込みオプションはL<Getopt::Long>によって処理され、ターゲットコマンド名の前に指定する必要があります。例えば
+
+    optex -Mxform --xform-visible=2 cat file
+
+C<--xform-visible>はC<xform>モジュールで定義された組み込みオプションです。
 
 =head1 STANDARD MODULES
 

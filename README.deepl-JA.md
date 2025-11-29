@@ -4,7 +4,7 @@ optex - 汎用コマンド・オプション・ラッパー
 
 # VERSION
 
-Version 1.02
+Version 1.03
 
 # SYNOPSIS
 
@@ -232,6 +232,12 @@ Version 1.02
     воскресенье, 22 октября 2017 г. 18:00:00 (JST)
 
 モジュール`i18n`は[Getopt::EX::i18n](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3Ai18n)として実装され、本ディストリビューションに含まれています。そのため、追加インストールすることなく、上記のように使用することができます。
+
+モジュールは、`__DATA__`セクションの`builtin`ディレクティブを使って組み込みオプションを定義することもできます。組み込みオプションは[Getopt::Long](https://metacpan.org/pod/Getopt%3A%3ALong)によって処理され、ターゲットコマンド名の前に指定する必要があります。例えば
+
+    optex -Mxform --xform-visible=2 cat file
+
+`--xform-visible`は`xform`モジュールで定義された組み込みオプションです。
 
 # STANDARD MODULES
 
