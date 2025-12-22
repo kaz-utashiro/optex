@@ -36,32 +36,50 @@ B<optex> -Mutil::filter [ --isub/--osub/--esub/--psub I<function> ] I<command>
 
 =over 4
 
-=item B<--if> I<command>
+=item B<--if> I<command>, B<--isub> I<function>
 
-=item B<--of> I<command>
+Set STDIN filter.  If the command starts with C<&>, module function
+is called instead.  C<--isub> is a shortcut for C<--if &function>.
 
-=item B<--ef> I<command>
+=item B<--of> I<command>, B<--osub> I<function>
 
-Set input/output filter command for STDIN, STDOUT and STDERR.  If the
-command start by C<&>, module function is called instead.
+Set STDOUT filter.
 
-=item B<--isub> I<function>
+=item B<--ef> I<command>, B<--esub> I<function>
 
-=item B<--osub> I<function>
+Set STDERR filter.
 
-=item B<--esub> I<function>
+=item B<--yf> I<command>, B<--ysub> I<function>
 
-Set filter function.  These are shortcut for B<--if> B<&>I<function>
-and such.
+Set STDOUT filter and merge STDERR to STDOUT.  The name comes from
+the shape of Y, where two streams merge into one.  Equivalent to
+C<--of 'command' --ef 'E<gt>&1'>.
 
-=item B<--psub> I<function>, B<--pf> I<&function>
+=item B<--pf> I<command>, B<--psub> I<function>
 
-Set pre-fork filter function.  This function is called before
-executing the target command process, and expected to return text
-data, that will be poured into target process's STDIN.  This allows
-you to share information between pre-fork and output filter processes.
+Set pre-fork filter.  This function is called before executing the
+target command process, and expected to return text data, that will
+be poured into target process's STDIN.  This allows you to share
+information between pre-fork and output filter processes.
 
 See L<App::optex::xform> for actual use case.
+
+Command can be one of the following forms:
+
+    command        external command
+    &function      module function
+    >file          redirect to file
+    >>file         append to file
+    >&1            dup to STDOUT (shell style)
+    >&2            dup to STDERR (shell style)
+    *STDOUT        dup to STDOUT (Perl style)
+    *STDERR        dup to STDERR (Perl style)
+
+To merge STDERR into STDOUT before filtering, use C<--yf> or
+C<--ef 'E<gt>&1'> after C<--of>:
+
+    --yf 'cat -n'
+    --of 'cat -n' --ef '>&1'
 
 =item B<--set-io-color> IO=I<color>
 
@@ -120,6 +138,7 @@ sub io_filter (&@) {
 	else  { croak "Missing option" }
     } // die "fork: $!\n";;
     return $pid if $pid > 0;
+    # child process (filter)
     if ($opt{STDERR}) {
 	open STDOUT, '>&', \*STDERR or die "dup: $!";
     }
@@ -137,7 +156,26 @@ sub set {
     for my $io (qw(PREFORK STDIN STDOUT STDERR)) {
 	my $filter = delete $opt{$io} // next;
 	my $pid;
-	if ($filter =~ s/^&//) {
+	# dup to another filehandle:
+	#   *STDOUT, *STDERR : explicit
+	#   >&1, >&2 : shell style
+	if ($filter =~ /^(\*STD(OUT|ERR)|>&([12]))$/) {
+	    my $dest = $2 // ($3 eq '1' ? 'OUT' : 'ERR');
+	    my $fh = $dest eq 'OUT' ? \*STDOUT : \*STDERR;
+	    if    ($io eq 'STDOUT') { open STDOUT, '>&', $fh or die "dup: $!" }
+	    elsif ($io eq 'STDERR') { open STDERR, '>&', $fh or die "dup: $!" }
+	    next;
+	}
+	elsif ($filter =~ /^(>>?)(.+)/) {
+	    # >file or >>file - redirect to file
+	    my($mode, $file) = ($1, $2);
+	    $pid = io_filter {
+		open my $fh, $mode, $file or die "open: $file: $!";
+		print $fh $_ while <>;
+		close $fh;
+	    } $io => 1;
+	}
+	elsif ($filter =~ s/^&//) {
 	    if ($filter !~ /::/) {
 		$filter = join '::', __PACKAGE__, $filter;
 	    }
@@ -162,11 +200,13 @@ sub set {
 
 Primitive function to prepare input/output filter.  All options are
 implemented by this function.  Takes C<STDIN>, C<STDOUT>, C<STDERR>,
-C<PREFORK> as an I<io> name and I<command> or &I<function> as a vaule.
+C<PREFORK> as an I<io> name.  Value can be command, &function, E<gt>file,
+E<gt>&1, E<gt>&2, *STDOUT, or *STDERR.
 
     mode function
     option --if   &set(STDIN=$<shift>)
     option --isub &set(STDIN=&$<shift>)
+    option --yf   &set(STDOUT=$<shift>,STDERR=>&1)
 
 =cut
 
@@ -521,15 +561,17 @@ __DATA__
 
 mode function
 
-option --if &set(STDIN=$<shift>)
-option --of &set(STDOUT=$<shift>)
-option --ef &set(STDERR=$<shift>)
-option --pf &set(PREFORK=$<shift>)
+option --if  &set(STDIN=$<shift>)
+option --of  &set(STDOUT=$<shift>)
+option --ef  &set(STDERR=$<shift>)
+option --pf  &set(PREFORK=$<shift>)
+option --yf  &set(STDOUT=$<shift>,STDERR=>&1)
 
-option --isub &set(STDIN=&$<shift>)
-option --osub &set(STDOUT=&$<shift>)
-option --esub &set(STDERR=&$<shift>)
-option --psub &set(PREFORK=&$<shift>)
+option --isub   &set(STDIN=&$<shift>)
+option --osub   &set(STDOUT=&$<shift>)
+option --esub   &set(STDERR=&$<shift>)
+option --psub   &set(PREFORK=&$<shift>)
+option --ysub  &set(STDOUT=&$<shift>,STDERR=>&1)
 
 option --set-io-color &io_color($<shift>)
 option --io-color --set-io-color STDERR=555/201;E

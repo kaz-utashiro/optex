@@ -204,8 +204,8 @@ END {
     } elsif (defined $status) {
 	$? = $status >> 8;
     }
-    close STDOUT;
     close STDERR;
+    close STDOUT;
 }
 
 ######################################################################
