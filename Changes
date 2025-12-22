@@ -2,6 +2,13 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+1.04 2025-12-22T00:27:08Z
+
+    - Add --yf/--ysub options to merge STDERR into STDOUT filter
+    - Add dup support (>&1, >&2, *STDOUT, *STDERR) in util::filter
+    - Add file redirect support (>file, >>file) in util::filter
+    - Fix close order (STDERR before STDOUT) for dup'd handles
+
 1.03 2025-11-29T08:15:19Z
 
     - -Mutil::chdir accept "path" as well as "PATH"
