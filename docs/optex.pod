@@ -6,7 +6,7 @@ optex - General purpose command option wrapper
 
 =head1 VERSION
 
-Version 1.04
+Version 1.05
 
 =head1 SYNOPSIS
 
@@ -427,6 +427,24 @@ Set command aliases.  Example:
 
 Command alias can be invoked either from symbolic link and command
 argument.
+
+=item B<include>
+
+Load extra TOML fragments before applying the main configuration.
+Accepts either a string or an array.  Each entry may be a literal path
+or a glob pattern.  Tilde is expanded, and relative paths are resolved
+against the file that declared the include.  Includes are processed
+depth-first; hashes merge recursively, arrays append, and scalars use
+last-in-wins semantics.  The main F<config.toml> is applied last so it
+can override included values.
+
+    include = [
+        "~/.optex.d/config.d/*.toml",
+        "local.toml",
+    ]
+
+Include directives can nest; cycles (including self-globs) are detected
+and reported as errors.
 
 =back
 

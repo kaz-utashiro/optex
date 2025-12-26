@@ -6,7 +6,7 @@ optex - 通用命令选项包装器
 
 =head1 VERSION
 
-Version 1.04
+Version 1.05
 
 =head1 SYNOPSIS
 
@@ -357,6 +357,17 @@ B<optex> 默认处理目标命令的模块选项 (-M)。不过，有一条命令
         hello = "echo -n 'hello world!'"
 
 命令别名可通过符号链接和命令参数调用。
+
+=item B<include>
+
+在应用主配置之前加载额外的 TOML 片段。接受字符串或数组。每个条目可以是字面路径或 glob 模式。Tilde 会被展开，相对路径会根据声明包含的文件进行解析。包含是深度优先处理的；哈希值递归合并，数组追加，标量使用后进先出语义。主 F<config.toml> 最后应用，因此可以覆盖包含值。
+
+    include = [
+        "~/.optex.d/config.d/*.toml",
+        "local.toml",
+    ]
+
+包含指令可以嵌套；循环（包括自球）会被检测到并作为错误报告。
 
 =back
 

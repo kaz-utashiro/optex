@@ -236,6 +236,14 @@
       "コマンドエイリアスは、シンボリックリンクとコマンド引数から呼び出すことができる。\n"
    ],
    [
+      "Load extra TOML fragments before applying the main configuration. Accepts either a string or an array. Each entry may be a literal path or a glob pattern. Tilde is expanded, and relative paths are resolved against the file that declared the include. Includes are processed depth-first; hashes merge recursively, arrays append, and scalars use last-in-wins semantics. The main F<config.toml> is applied last so it can override included values.\n",
+      "メインの設定を適用する前に、余分な TOML フラグメントを読み込みます。文字列か配列を受け取ります。各エントリは、リテラルパスかグロブパターンです。チルダは展開され、相対パスはインクルードを宣言したファイルに対して解決されます。インクルードは深さ優先で処理され、ハッシュは再帰的にマージされ、配列は追加され、スカラーはlast-in-winsセマンティクスを使用します。メインのF<config.toml>は最後に適用されるので、インクルードされた値を上書きすることができます。\n"
+   ],
+   [
+      "Include directives can nest; cycles (including self-globs) are detected and reported as errors.\n",
+      "インクルードディレクティブは入れ子にすることができます。（自己グロブを含む）サイクルは検出され、エラーとして報告されます。\n"
+   ],
+   [
       "System module directory.\n",
       "システムモジュールディレクトリ\n"
    ],

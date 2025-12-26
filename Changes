@@ -2,6 +2,12 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+1.05 2025-12-26T02:12:58Z
+
+    - Add config.toml C<include> support (string/array, glob, nesting, loop detection)
+    - Extract config loader into App::optex::Config
+    - Improve command resolution and report "command not found" with exit status 127
+
 1.04 2025-12-22T00:27:08Z
 
     - Add --yf/--ysub options to merge STDERR into STDOUT filter
@@ -182,4 +188,3 @@ v0.0.2 2017-11-28T15:12:44Z
 v0.0.1 2017-11-17T04:46:02Z
 
     - initial release
-

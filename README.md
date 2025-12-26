@@ -4,7 +4,7 @@ optex - General purpose command option wrapper
 
 # VERSION
 
-Version 1.04
+Version 1.05
 
 # SYNOPSIS
 
