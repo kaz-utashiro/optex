@@ -46,7 +46,7 @@ use Cwd qw(abs_path);
 use List::Util qw(uniq max);
 use Text::ParseWords qw(shellwords);
 use IO::File;
-use TOML;
+use App::optex::Config;
 
 binmode STDOUT, ":encoding(utf8)";
 binmode STDERR, ":encoding(utf8)";
@@ -79,14 +79,7 @@ my $config_file = $ENV{$env_CONFIG} || "$config_dir/config.toml";
 ##
 ## load config file
 ##
-my $config = sub {
-    my $file = shift;
-    my $fh = IO::File->new($file, "<:encoding(UTF-8)") or return {};
-    my $toml = do { local $/; <$fh> };
-    my($data, $err) = from_toml $toml;
-    die "$file: $err\n" unless $data;
-    $data;
-}->($config_file);
+my $config = App::optex::Config::load_config($config_file);
 my $alias = $config->{alias} //= {};
 my $nomodule = $config->{"no-module"} //= [];
 my %nomodule = do {
@@ -190,6 +183,10 @@ unless ($no_operation) {
 }
 
 my $exec_name = $aliased_name || search_path($target_name);
+unless (defined $exec_name) {
+    warn "$abs_name: $target_name: command not found\n";
+    exit 127;
+}
 
 warn "$abs_name: exec $exec_name @ARGV\n" if $debug;
 
@@ -218,12 +215,23 @@ sub load_rc {
 
 sub search_path {
     my $new = shift;
-    for my $path (split /:+/, $ENV{PATH}) {
-	-x "$path/$new" or next;
+    return $new if $new =~ m{/} && -x $new;
+
+    # Scan PATH and return the first executable that is not the running
+    # optex binary itself (avoid re-entering the wrapper and looping).
+    my $self_abs = abs_path("$abs_dir/$abs_name");
+
+    for my $path (split /:+/, $ENV{PATH} // '') {
+	my $candidate = "$path/$new";
+	-x $candidate or next;
 	next if $path eq $cmd_dir and $new eq $cmd_name;
-	return "$path/$new";
+
+	my $cand_abs = eval { abs_path($candidate) } || $candidate;
+	next if $cand_abs eq $self_abs;
+	return $candidate;
     }
-    return $new;
+
+    return;
 }
 
 sub self_option {
@@ -845,6 +853,24 @@ Set command aliases.  Example:
 
 Command alias can be invoked either from symbolic link and command
 argument.
+
+=item B<include>
+
+Load extra TOML fragments before applying the main configuration.
+Accepts either a string or an array.  Each entry may be a literal path
+or a glob pattern.  Tilde is expanded, and relative paths are resolved
+against the file that declared the include.  Includes are processed
+depth-first; hashes merge recursively, arrays append, and scalars use
+last-in-wins semantics.  The main F<config.toml> is applied last so it
+can override included values.
+
+    include = [
+        "~/.optex.d/config.d/*.toml",
+        "local.toml",
+    ]
+
+Include directives can nest; cycles (including self-globs) are detected
+and reported as errors.
 
 =back
 

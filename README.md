@@ -400,6 +400,24 @@ format.
     Command alias can be invoked either from symbolic link and command
     argument.
 
+- **include**
+
+    Load extra TOML fragments before applying the main configuration.
+    Accepts either a string or an array.  Each entry may be a literal path
+    or a glob pattern.  Tilde is expanded, and relative paths are resolved
+    against the file that declared the include.  Includes are processed
+    depth-first; hashes merge recursively, arrays append, and scalars use
+    last-in-wins semantics.  The main `config.toml` is applied last so it
+    can override included values.
+
+        include = [
+            "~/.optex.d/config.d/*.toml",
+            "local.toml",
+        ]
+
+    Include directives can nest; cycles (including self-globs) are detected
+    and reported as errors.
+
 # FILES AND DIRECTORIES
 
 - `PERLLIB/App/optex`
