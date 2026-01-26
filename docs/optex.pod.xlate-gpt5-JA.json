@@ -298,5 +298,9 @@
    [
       "Specify the path to use when creating symbolic links with C<--ln>. If not set, C<$0> is used. This is useful when B<optex> is invoked through a wrapper script (e.g., Homebrew installation) and you want the symbolic links to point to the wrapper rather than the actual script.\n",
       "C<--ln> でシンボリックリンクを作成する際に使用するパスを指定します。未設定の場合は C<$0> が使用されます。これは、B<optex> がラッパースクリプト（例: Homebrew インストール）経由で呼び出され、シンボリックリンクを実際のスクリプトではなくラッパーを指すようにしたい場合に役立ちます。\n"
+   ],
+   [
+      "Specify the original command path used to invoke B<optex>. This is useful when B<optex> is invoked through a wrapper script and the original C<$0> is lost. When a symbolic link to the wrapper is executed, the wrapper should set this variable to its own C<$0> so that B<optex> can determine the correct command name.\n",
+      "B<optex> を呼び出すために使用された元のコマンドパスを指定します。これは、ラッパースクリプト経由で B<optex> が呼び出され、元の C<$0> が失われた場合に有用です。ラッパーへのシンボリックリンクが実行された場合、ラッパーは自分自身の C<$0> をこの変数に設定し、B<optex> が正しいコマンド名を判別できるようにする必要があります。\n"
    ]
 ]

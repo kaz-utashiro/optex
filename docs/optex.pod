@@ -6,7 +6,7 @@ optex - General purpose command option wrapper
 
 =head1 VERSION
 
-Version 1.06
+Version 1.0601
 
 =head1 SYNOPSIS
 
@@ -529,6 +529,14 @@ If not set, C<$0> is used.  This is useful when B<optex> is invoked
 through a wrapper script (e.g., Homebrew installation) and you want
 the symbolic links to point to the wrapper rather than the actual
 script.
+
+=item OPTEX_INVOKED_AS
+
+Specify the original command path used to invoke B<optex>.  This is
+useful when B<optex> is invoked through a wrapper script and the
+original C<$0> is lost.  When a symbolic link to the wrapper is
+executed, the wrapper should set this variable to its own C<$0> so
+that B<optex> can determine the correct command name.
 
 =back
 

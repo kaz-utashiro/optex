@@ -6,7 +6,7 @@ optex - 通用命令选项包装器
 
 =head1 VERSION
 
-Version 1.06
+Version 1.0601
 
 =head1 SYNOPSIS
 
@@ -444,6 +444,10 @@ I<command> 的默认模块。
 =item OPTEX_SCRIPT_PATH
 
 指定创建符号链接时使用的路径（C<--ln>）。若未设置，则使用C<$0>。当通过封装脚本（如Homebrew安装）调用B<optex>时，此选项尤为有用——此时可让符号链接指向封装脚本而非实际脚本。
+
+=item OPTEX_INVOKED_AS
+
+指定用于调用 B<optex> 的原始命令路径。当通过封装脚本调用 B<optex> 且原始 C<$0> 丢失时，此设置尤为重要。执行指向封装脚本的符号链接时，该脚本应将此变量设置为自身的 C<$0>，以便 B<optex> 能够确定正确的命令名称。
 
 =back
 

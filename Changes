@@ -2,6 +2,11 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+1.0601 2026-01-26T07:07:49Z
+
+    - Add OPTEX_INVOKED_AS environment variable to preserve original $0
+      when invoked through wrapper scripts (e.g., Homebrew installation)
+
 1.06 2026-01-26T01:59:39Z
 
     - Support OPTEX_SCRIPT_PATH environment variable for --ln symlink creation.
