@@ -484,6 +484,14 @@ format.
     the symbolic links to point to the wrapper rather than the actual
     script.
 
+- OPTEX\_INVOKED\_AS
+
+    Specify the original command path used to invoke **optex**.  This is
+    useful when **optex** is invoked through a wrapper script and the
+    original `$0` is lost.  When a symbolic link to the wrapper is
+    executed, the wrapper should set this variable to its own `$0` so
+    that **optex** can determine the correct command name.
+
 # SEE ALSO
 
 [Getopt::EX](https://metacpan.org/pod/Getopt%3A%3AEX), [Getopt::EX::Loader](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3ALoader), [Getopt::EX::Module](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3AModule)

@@ -58,8 +58,9 @@ our $mod_opt = '-M';
 our $mod_arg = 1;	# Process -M option in target command
 our $exit_code;
 
-my($cmd_dir, $cmd_name) = ($0           =~ m{ (.*) / ([^/]+) $ }x) or die;
-my($abs_dir, $abs_name) = (abs_path($0) =~ m{ (.*) / ([^/]+) $ }x) or die;
+my $command_path = $ENV{OPTEX_INVOKED_AS} // $0;
+my($cmd_dir, $cmd_name) = ($command_path =~ m{ (.*) / ([^/]+) $ }x) or die;
+my($abs_dir, $abs_name) = (abs_path($0)  =~ m{ (.*) / ([^/]+) $ }x) or die;
 my $env_MODULE_PATH = sprintf '%s_MODULE_PATH', uc($abs_name);
 my $env_ROOT        = sprintf '%s_ROOT',        uc($abs_name);
 my $env_BINDIR      = sprintf '%s_BINDIR',      uc($abs_name);
@@ -956,6 +957,14 @@ If not set, C<$0> is used.  This is useful when B<optex> is invoked
 through a wrapper script (e.g., Homebrew installation) and you want
 the symbolic links to point to the wrapper rather than the actual
 script.
+
+=item OPTEX_INVOKED_AS
+
+Specify the original command path used to invoke B<optex>.  This is
+useful when B<optex> is invoked through a wrapper script and the
+original C<$0> is lost.  When a symbolic link to the wrapper is
+executed, the wrapper should set this variable to its own C<$0> so
+that B<optex> can determine the correct command name.
 
 =back
 
