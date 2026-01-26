@@ -6,7 +6,7 @@ optex - General purpose command option wrapper
 
 =head1 VERSION
 
-Version 1.05
+Version 1.06
 
 =head1 SYNOPSIS
 
@@ -522,6 +522,14 @@ standard path.
 
 Override default symbolic link directory F<OPTEX_ROOT/bin>.
 
+=item OPTEX_SCRIPT_PATH
+
+Specify the path to use when creating symbolic links with C<--ln>.
+If not set, C<$0> is used.  This is useful when B<optex> is invoked
+through a wrapper script (e.g., Homebrew installation) and you want
+the symbolic links to point to the wrapper rather than the actual
+script.
+
 =back
 
 
@@ -543,7 +551,7 @@ Kazumasa Utashiro
 You can redistribute it and/or modify it under the same terms
 as Perl itself.
 
-Copyright ©︎ 2017-2025 Kazumasa Utashiro
+Copyright ©︎ 2017-2026 Kazumasa Utashiro
 
 
 =cut

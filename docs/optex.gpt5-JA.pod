@@ -6,7 +6,7 @@ optex - 汎用コマンドオプションラッパー
 
 =head1 VERSION
 
-Version 1.05
+Version 1.06
 
 =head1 SYNOPSIS
 
@@ -441,6 +441,10 @@ I<command> 用のデフォルトモジュール。
 
 デフォルトのシンボリックリンクディレクトリ F<OPTEX_ROOT/bin> を上書きします。
 
+=item OPTEX_SCRIPT_PATH
+
+C<--ln> でシンボリックリンクを作成する際に使用するパスを指定します。未設定の場合は C<$0> が使用されます。これは、B<optex> がラッパースクリプト（例: Homebrew インストール）経由で呼び出され、シンボリックリンクを実際のスクリプトではなくラッパーを指すようにしたい場合に役立ちます。
+
 =back
 
 
@@ -462,7 +466,7 @@ Kazumasa Utashiro
 You can redistribute it and/or modify it under the same terms
 as Perl itself.
 
-Copyright ©︎ 2017-2025 Kazumasa Utashiro
+Copyright ©︎ 2017-2026 Kazumasa Utashiro
 
 
 =cut

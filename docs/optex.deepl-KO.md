@@ -4,7 +4,7 @@ optex - 범용 명령 옵션 래퍼
 
 # VERSION
 
-Version 1.05
+Version 1.06
 
 # SYNOPSIS
 
@@ -395,6 +395,10 @@ Version 1.05
 
     기본 심볼릭 링크 디렉토리 `OPTEX_ROOT/bin`을 재정의합니다.
 
+- OPTEX\_SCRIPT\_PATH
+
+    `--ln`으로 심볼릭 링크를 생성할 때 사용할 경로를 지정합니다. 설정하지 않으면 `$0`이 사용됩니다. 이는 **optex**가 래퍼 스크립트(예: Homebrew 설치)를 통해 호출될 때 심볼릭 링크가 실제 스크립트가 아닌 래퍼를 가리키도록 하려는 경우에 유용합니다.
+
 # SEE ALSO
 
 [Getopt::EX](https://metacpan.org/pod/Getopt%3A%3AEX), [Getopt::EX::Loader](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3ALoader), [Getopt::EX::Module](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3AModule)
@@ -412,4 +416,4 @@ Kazumasa Utashiro
 You can redistribute it and/or modify it under the same terms
 as Perl itself.
 
-Copyright ©︎ 2017-2025 Kazumasa Utashiro
+Copyright ©︎ 2017-2026 Kazumasa Utashiro

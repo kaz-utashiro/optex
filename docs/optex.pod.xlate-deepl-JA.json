@@ -294,5 +294,9 @@
    [
       "Override default symbolic link directory F<OPTEX_ROOT/bin>.\n",
       "デフォルトのシンボリックリンクディレクトリ F<OPTEX_ROOT/bin> を上書きします。\n"
+   ],
+   [
+      "Specify the path to use when creating symbolic links with C<--ln>. If not set, C<$0> is used. This is useful when B<optex> is invoked through a wrapper script (e.g., Homebrew installation) and you want the symbolic links to point to the wrapper rather than the actual script.\n",
+      "シンボリックリンクを作成する際に使用するパスを指定します。C<--ln>で設定します。設定しない場合、C<$0>が使用されます。これは、B<optex>がラッパースクリプト（例：Homebrewインストール）経由で呼び出され、シンボリックリンクを実際のスクリプトではなくラッパーを指すようにしたい場合に有用です。\n"
    ]
 ]

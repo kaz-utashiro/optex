@@ -4,7 +4,7 @@ optex - 汎用コマンドオプションラッパー
 
 # VERSION
 
-Version 1.05
+Version 1.06
 
 # SYNOPSIS
 
@@ -395,6 +395,10 @@ macOS の `date` コマンドには `-I[TIMESPEC]` オプションがありま�
 
     デフォルトのシンボリックリンクディレクトリ `OPTEX_ROOT/bin` を上書きします。
 
+- OPTEX\_SCRIPT\_PATH
+
+    `--ln` でシンボリックリンクを作成する際に使用するパスを指定します。未設定の場合は `$0` が使用されます。これは、**optex** がラッパースクリプト（例: Homebrew インストール）経由で呼び出され、シンボリックリンクを実際のスクリプトではなくラッパーを指すようにしたい場合に役立ちます。
+
 # SEE ALSO
 
 [Getopt::EX](https://metacpan.org/pod/Getopt%3A%3AEX), [Getopt::EX::Loader](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3ALoader), [Getopt::EX::Module](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3AModule)
@@ -412,4 +416,4 @@ Kazumasa Utashiro
 You can redistribute it and/or modify it under the same terms
 as Perl itself.
 
-Copyright ©︎ 2017-2025 Kazumasa Utashiro
+Copyright ©︎ 2017-2026 Kazumasa Utashiro

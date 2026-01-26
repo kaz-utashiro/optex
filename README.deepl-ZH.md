@@ -4,7 +4,7 @@ optex - 通用命令选项包装器
 
 # VERSION
 
-Version 1.05
+Version 1.06
 
 # SYNOPSIS
 
@@ -395,6 +395,10 @@ Version 1.05
 
     覆盖默认的符号链接目录 `OPTEX_ROOT/bin`。
 
+- OPTEX\_SCRIPT\_PATH
+
+    指定创建符号链接时使用的路径（`--ln`）。若未设置，则使用`$0`。当通过封装脚本（如Homebrew安装）调用**optex**时，此选项尤为有用——此时可让符号链接指向封装脚本而非实际脚本。
+
 # SEE ALSO
 
 [Getopt::EX](https://metacpan.org/pod/Getopt%3A%3AEX), [Getopt::EX::Loader](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3ALoader), [Getopt::EX::Module](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3AModule)
@@ -412,4 +416,4 @@ Kazumasa Utashiro
 You can redistribute it and/or modify it under the same terms
 as Perl itself.
 
-Copyright ©︎ 2017-2025 Kazumasa Utashiro
+Copyright ©︎ 2017-2026 Kazumasa Utashiro

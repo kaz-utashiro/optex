@@ -294,5 +294,9 @@
    [
       "Override default symbolic link directory F<OPTEX_ROOT/bin>.\n",
       "覆盖默认的符号链接目录 F<OPTEX_ROOT/bin>。\n"
+   ],
+   [
+      "Specify the path to use when creating symbolic links with C<--ln>. If not set, C<$0> is used. This is useful when B<optex> is invoked through a wrapper script (e.g., Homebrew installation) and you want the symbolic links to point to the wrapper rather than the actual script.\n",
+      "指定创建符号链接时使用的路径（C<--ln>）。若未设置，则使用C<$0>。当通过封装脚本（如Homebrew安装）调用B<optex>时，此选项尤为有用——此时可让符号链接指向封装脚本而非实际脚本。\n"
    ]
 ]

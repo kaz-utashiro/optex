@@ -47,7 +47,7 @@ ifdef SRC_DIR
 endif
 SRCPATH := $(if $(SRC_DIR),$(SRC_DIR)/,)
 
-GREPLE := perl -I../lib -S greple
+GREPLE := PERL5LIB=../lib$${PERL5LIB:+:$$PERL5LIB} greple
 
 PODIFY := $(GREPLE) -Mperl --nocolor --le :pod
 $(foreach mod,$(ORIGIN),$(eval \
@@ -61,12 +61,10 @@ XLATE := xlate
 XLATE += $(if $(XLATE_LABOR),,-a)
 XLATE += $(if $(XLATE_INIT),-r)
 
-deepl_JA_FORM   ?= desumasu
-deepl_JA_DICT   := $(wildcard *.dict)
-deepl_JA_FILTER := $(GREPLE) -Mperl -Msubst::desumasu \
-	$(if $(findstring $(deepl_JA_FORM).dict,$(deepl_JA_DICT)),--dict $(deepl_JA_FORM).dict) \
-	--pod --subst --all --no-color --need=0 \
-	--$(deepl_JA_FORM) 
+#deepl_JA_DICT   := $(wildcard *.dict)
+#deepl_JA_FILTER := $(GREPLE) -Mperl -Msubst \
+#	$(if $(findstring $(deepl_JA_FORM).dict,$(deepl_JA_DICT)),--dict $(deepl_JA_FORM).dict) \
+#	--pod --subst --all --no-color --need=0
 
 define LANG_POD
   $(SRCPATH)%.$2-$1.pod: $(SRCPATH)%.pod Makefile

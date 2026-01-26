@@ -2,6 +2,10 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+1.06 2026-01-26T01:59:39Z
+
+    - Support OPTEX_SCRIPT_PATH environment variable for --ln symlink creation.
+
 1.05 2025-12-26T02:12:58Z
 
     - Add config.toml C<include> support (string/array, glob, nesting, loop detection)
