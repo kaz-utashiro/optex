@@ -476,6 +476,14 @@ format.
 
     Override default symbolic link directory `OPTEX_ROOT/bin`.
 
+- OPTEX\_SCRIPT\_PATH
+
+    Specify the path to use when creating symbolic links with `--ln`.
+    If not set, `$0` is used.  This is useful when **optex** is invoked
+    through a wrapper script (e.g., Homebrew installation) and you want
+    the symbolic links to point to the wrapper rather than the actual
+    script.
+
 # SEE ALSO
 
 [Getopt::EX](https://metacpan.org/pod/Getopt%3A%3AEX), [Getopt::EX::Loader](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3ALoader), [Getopt::EX::Module](https://metacpan.org/pod/Getopt%3A%3AEX%3A%3AModule)
@@ -493,4 +501,4 @@ Kazumasa Utashiro
 You can redistribute it and/or modify it under the same terms
 as Perl itself.
 
-Copyright ©︎ 2017-2025 Kazumasa Utashiro
+Copyright ©︎ 2017-2026 Kazumasa Utashiro

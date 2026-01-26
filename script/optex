@@ -298,17 +298,18 @@ sub _symlink {
     my($argv, $op) = @_;
     -d $bin_dir or die "Directory $bin_dir does not exist.\n";
 
+    my $script_path = $ENV{OPTEX_SCRIPT_PATH} // $0;
     my @target = @$argv;
     for my $target (@target) {
 	my $link = "$bin_dir/$target";
 	if ($op->{link}) {
 	    -f $link and do { warn "$link already exists.\n"; next };
-	    symlink $0, $link or die "$link: $!\n";
-	    print "$link created.\n";
+	    symlink $script_path, $link or die "$link: $!\n";
+	    print "$link -> $script_path\n";
 	}
 	elsif ($op->{unlink}) {
 	    -l $link or do { warn "$link is not symlink\n"; next };
-	    if ((my $name = readlink $link) ne $0 ) {
+	    if ((my $name = readlink $link) ne $script_path ) {
 		if (not $op->{force}) {
 		    warn
 			"$link has unexpected link: -> $name\n" .
@@ -948,6 +949,14 @@ standard path.
 
 Override default symbolic link directory F<OPTEX_ROOT/bin>.
 
+=item OPTEX_SCRIPT_PATH
+
+Specify the path to use when creating symbolic links with C<--ln>.
+If not set, C<$0> is used.  This is useful when B<optex> is invoked
+through a wrapper script (e.g., Homebrew installation) and you want
+the symbolic links to point to the wrapper rather than the actual
+script.
+
 =back
 
 
@@ -969,7 +978,7 @@ Kazumasa Utashiro
 You can redistribute it and/or modify it under the same terms
 as Perl itself.
 
-Copyright ©︎ 2017-2025 Kazumasa Utashiro
+Copyright ©︎ 2017-2026 Kazumasa Utashiro
 
 
 =cut
