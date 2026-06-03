@@ -1,5 +1,11 @@
 package App::optex::Tmpfile;
 
+# DEPRECATED: superseded by Command::Run::Tmpfile (use new(raw => 1) for
+# byte-transparent behavior).  Kept only for backward compatibility with
+# external consumers (App::optex::git, ::msdoc, ::textconv) that still
+# "use App::optex::Tmpfile".  Remove once those have migrated to
+# Command::Run::Tmpfile and been released.
+
 use strict;
 use warnings;
 use Carp;

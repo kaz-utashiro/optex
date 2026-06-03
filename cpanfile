@@ -1,5 +1,6 @@
 requires 'perl', '5.014';
 
+requires 'Command::Run', '1.01';
 requires 'Getopt::EX', '2.1.6';
 requires 'Getopt::EX::Hashed', '1.0503';
 requires 'Getopt::EX::i18n';

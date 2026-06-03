@@ -223,14 +223,14 @@ will print:
 
 ######################################################################
 
-use App::optex::Tmpfile;
+use Command::Run::Tmpfile;
 
 sub proc {
     state @persist;
     argv {
 	for (@_) {
 	    my($command) = /^ \<\( (.*) \) $/x or next;
-	    my $tmp = new App::optex::Tmpfile;
+	    my $tmp = Command::Run::Tmpfile->new(raw => 1);
 	    $tmp->write(`$command`)->rewind;
 	    push @persist, $tmp;
 	    $_ = $tmp->path;
@@ -249,7 +249,7 @@ Process substitution.
 
 ######################################################################
 
-use App::optex::Tmpfile;
+use Command::Run::Tmpfile;
 
 sub filter {
     state @persist;
@@ -258,7 +258,7 @@ sub filter {
     argv {
 	for (@_) {
 	    -e $_ or next;
-	    my $tmp = new App::optex::Tmpfile;
+	    my $tmp = Command::Run::Tmpfile->new(raw => 1);
 	    $tmp->write(`$command < $_`)->rewind;
 	    push @persist, $tmp;
 	    $_ = $tmp->path;
