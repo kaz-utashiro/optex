@@ -47,7 +47,7 @@ ifdef SRC_DIR
 endif
 SRCPATH := $(if $(SRC_DIR),$(SRC_DIR)/,)
 
-GREPLE := PERL5LIB=../lib$${PERL5LIB:+:$$PERL5LIB} greple
+GREPLE := PERL5LIB=../lib$(if $(PERL5LIB),:$(PERL5LIB)) greple
 
 PODIFY := $(GREPLE) -Mperl --nocolor --le :pod
 $(foreach mod,$(ORIGIN),$(eval \
