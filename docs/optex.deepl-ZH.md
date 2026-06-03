@@ -4,7 +4,7 @@ optex - 通用命令选项包装器
 
 # VERSION
 
-Version 1.0601
+Version 1.07
 
 # SYNOPSIS
 

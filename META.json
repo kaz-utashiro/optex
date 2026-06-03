@@ -77,7 +77,7 @@
          "web" : "https://github.com/kaz-utashiro/optex"
       }
    },
-   "version" : "1.0601",
+   "version" : "1.07",
    "x_authority" : "cpan:UTASHIRO",
    "x_contributors" : [
       "Kazumasa Utashiro <kaz@utashiro.com>",

@@ -4,7 +4,7 @@ optex - 범용 명령 옵션 래퍼
 
 # VERSION
 
-Version 1.0601
+Version 1.07
 
 # SYNOPSIS
 

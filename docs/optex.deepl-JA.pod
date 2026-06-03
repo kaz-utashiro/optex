@@ -6,7 +6,7 @@ optex - 汎用コマンド・オプション・ラッパー
 
 =head1 VERSION
 
-Version 1.0601
+Version 1.07
 
 =head1 SYNOPSIS
 

@@ -4,7 +4,7 @@ optex - 汎用コマンドオプションラッパー
 
 # VERSION
 
-Version 1.0601
+Version 1.07
 
 # SYNOPSIS
 

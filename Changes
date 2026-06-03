@@ -2,6 +2,11 @@ Revision history for `optex' command.
 
 {{$NEXT}}
 
+1.07 2026-06-03T08:56:34Z
+
+    - util::argv: use Command::Run::Tmpfile (raw mode) instead of the
+      bundled App::optex::Tmpfile (requires Command::Run 1.01)
+
 1.0601 2026-01-26T07:07:49Z
 
     - Add OPTEX_INVOKED_AS environment variable to preserve original $0
